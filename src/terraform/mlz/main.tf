@@ -1,33 +1,35 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-terraform {
-  # It is recommended to use remote state instead of local
-  # If you are using Terraform Cloud, You can update these values in order to configure your remote state.
-  /*  backend "remote" {
-    organization = "{{ORGANIZATION_NAME}}"
-    workspaces {
-      name = "{{WORKSPACE_NAME}}"
-    }
-  }
-  */
-  backend "local" {}
 
-  required_version = ">= 1.0.11"
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "= 2.90.0"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "= 3.1.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = "0.7.2"
-    }
-  }
-}
+// JC Note: Terraform and backend config handled by wrapper.
+// terraform {
+//   # It is recommended to use remote state instead of local
+//   # If you are using Terraform Cloud, You can update these values in order to configure your remote state.
+//   /*  backend "remote" {
+//     organization = "{{ORGANIZATION_NAME}}"
+//     workspaces {
+//       name = "{{WORKSPACE_NAME}}"
+//     }
+//   }
+//   */
+//   backend "local" {}
+
+//   required_version = ">= 1.0.11"
+//   required_providers {
+//     azurerm = {
+//       source  = "hashicorp/azurerm"
+//       version = "= 2.90.0"
+//     }
+//     random = {
+//       source  = "hashicorp/random"
+//       version = "= 3.1.0"
+//     }
+//     time = {
+//       source  = "hashicorp/time"
+//       version = "0.7.2"
+//     }
+//   }
+// }
 
 provider "azurerm" {
   environment     = var.environment

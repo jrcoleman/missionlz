@@ -44,6 +44,7 @@ variable "tags" {
 variable "hub_subid" {
   description = "Subscription ID for the Hub deployment"
   type        = string
+  sensitive = true
 }
 
 variable "hub_rgname" {
@@ -62,6 +63,7 @@ variable "hub_vnet_address_space" {
   description = "The address space to be used for the virtual network."
   type        = list(string)
   default     = ["10.0.100.0/24"]
+  sensitive = true
 }
 
 #################################
@@ -72,12 +74,14 @@ variable "hub_client_address_space" {
   description = "The address space to be used for the Firewall virtual network."
   type        = string
   default     = "10.0.100.0/26"
+  sensitive = true
 }
 
 variable "hub_management_address_space" {
   description = "The address space to be used for the Firewall virtual network subnet used for management traffic."
   type        = string
   default     = "10.0.100.64/26"
+  sensitive = true
 }
 
 variable "firewall_name" {
@@ -136,6 +140,7 @@ variable "bastion_address_space" {
   description = "The address space to be used for the Bastion Host subnet (must be /27 or larger)."
   type        = string
   default     = "10.0.100.128/27"
+  sensitive = true
 }
 
 variable "bastion_public_ip_name" {
@@ -313,6 +318,7 @@ variable "tier0_subid" {
   description = "Subscription ID for the deployment"
   type        = string
   default     = ""
+  sensitive = true
 }
 
 variable "tier0_rgname" {
@@ -331,6 +337,7 @@ variable "tier0_vnet_address_space" {
   description = "Address space prefixes list of strings"
   type        = list(string)
   default     = ["10.0.110.0/26"]
+  sensitive = true
 }
 
 variable "tier0_subnets" {
@@ -406,6 +413,7 @@ variable "tier1_subid" {
   description = "Subscription ID for the deployment"
   type        = string
   default     = ""
+  sensitive = true
 }
 
 variable "tier1_rgname" {
@@ -436,6 +444,7 @@ variable "tier1_vnet_address_space" {
   description = "Address space prefixes for the virtual network"
   type        = list(string)
   default     = ["10.0.115.0/26"]
+  sensitive = true
 }
 
 variable "tier1_subnets" {
@@ -511,6 +520,7 @@ variable "tier2_subid" {
   description = "Subscription ID for the deployment"
   type        = string
   default     = ""
+  sensitive = true
 }
 
 variable "tier2_rgname" {
@@ -529,6 +539,7 @@ variable "tier2_vnet_address_space" {
   description = "Address space prefixes list of strings"
   type        = list(string)
   default     = ["10.0.120.0/26"]
+  sensitive = true
 }
 
 variable "tier2_subnets" {
