@@ -70,6 +70,18 @@ variable "hub_vnet_address_space" {
 # Firewall configuration section
 #################################
 
+variable "create_firewall" {
+  description = "Create a firewall?"
+  type = bool
+  default = true
+}
+
+variable "custom_firewall_ip" {
+  description = "IP address of customer firewall solution."
+  default = ""
+  type = string
+}
+
 variable "hub_client_address_space" {
   description = "The address space to be used for the Firewall virtual network."
   type        = string

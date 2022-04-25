@@ -43,6 +43,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg" {
 }
 
 resource "azurerm_route_table" "routetable" {
+  count = var.firewall_ip_address != "" ? 1 : 0
   name                = var.routetable_name
   resource_group_name = azurerm_subnet.subnet.resource_group_name
   location            = var.location
@@ -50,17 +51,19 @@ resource "azurerm_route_table" "routetable" {
 }
 
 resource "azurerm_route" "routetable" {
+  count = var.firewall_ip_address != "" ? 1 : 0
   name                   = "default_route"
-  resource_group_name    = azurerm_route_table.routetable.resource_group_name
-  route_table_name       = azurerm_route_table.routetable.name
+  resource_group_name    = azurerm_route_table.routetable[0].resource_group_name
+  route_table_name       = azurerm_route_table.routetable[0].name
   address_prefix         = "0.0.0.0/0"
   next_hop_type          = "VirtualAppliance"
   next_hop_in_ip_address = var.firewall_ip_address
 }
 
 resource "azurerm_subnet_route_table_association" "routetable" {
+  count = var.firewall_ip_address != "" ? 1 : 0
   subnet_id      = azurerm_subnet.subnet.id
-  route_table_id = azurerm_route_table.routetable.id
+  route_table_id = azurerm_route_table.routetable[0].id
 }
 
 locals {

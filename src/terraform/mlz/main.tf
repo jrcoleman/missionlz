@@ -328,6 +328,7 @@ module "hub-network" {
 }
 
 module "firewall" {
+  count = var.create_firewall ? 1 : 0
   providers  = { azurerm = azurerm.hub }
   depends_on = [azurerm_resource_group.hub, module.hub-network]
   source     = "../modules/firewall"
@@ -362,7 +363,7 @@ module "spoke-network-t0" {
 
   location = azurerm_resource_group.tier0.location
 
-  firewall_private_ip = module.firewall.firewall_private_ip
+  firewall_private_ip = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
@@ -406,7 +407,7 @@ module "spoke-network-t1" {
 
   location = azurerm_resource_group.tier1.location
 
-  firewall_private_ip = module.firewall.firewall_private_ip
+  firewall_private_ip = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
@@ -450,7 +451,7 @@ module "spoke-network-t2" {
 
   location = azurerm_resource_group.tier2.location
 
-  firewall_private_ip = module.firewall.firewall_private_ip
+  firewall_private_ip = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
@@ -516,7 +517,7 @@ module "jumpbox-subnet" {
   nsg_rules = var.jumpbox_subnet.nsg_rules
 
   routetable_name     = var.jumpbox_subnet.routetable_name
-  firewall_ip_address = module.firewall.firewall_private_ip
+  firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
   log_analytics_storage_id            = module.hub-network.log_analytics_storage_id
   log_analytics_workspace_id          = azurerm_log_analytics_workspace.laws.workspace_id

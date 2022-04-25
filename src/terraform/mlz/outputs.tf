@@ -35,3 +35,8 @@ output "laws_rgname" {
   description = "Resource Group for Laws"
   value       = azurerm_log_analytics_workspace.laws.resource_group_name
 }
+
+output "laws_instance_id" {
+  description = "ID of the Log Analytics Workspace instance"
+  value = azurerm_log_analytics_workspace.laws.workspace_id
+}
