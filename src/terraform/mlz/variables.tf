@@ -26,7 +26,12 @@ variable "location" {
 variable "resourcePrefix" {
   description = "A name for the deployment. It defaults to mlz."
   type        = string
-  default     = "mlz"
+}
+
+variable "resourceSuffix" {
+  description = "Suffix for resource names."
+  type = string
+  default = "mlz"
 }
 
 variable "tags" {
@@ -56,7 +61,7 @@ variable "hub_rgname" {
 variable "hub_vnetname" {
   description = "Virtual Network Name for the deployment"
   type        = string
-  default     = "hub-vnet"
+  default     = "vnet-hub"
 }
 
 variable "hub_vnet_address_space" {
@@ -437,13 +442,13 @@ variable "tier1_rgname" {
 variable "tier1_vnetname" {
   description = "Virtual Network Name for the deployment"
   type        = string
-  default     = "operations-vnet"
+  default     = "vnet-operations"
 }
 
 variable "log_analytics_workspace_name" {
   description = "Log Analytics Workspace Name for the deployment"
   type        = string
-  default     = ""
+  default     = "log-operations"
 }
 
 variable "create_sentinel" {
