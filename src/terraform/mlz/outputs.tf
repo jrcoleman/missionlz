@@ -18,7 +18,7 @@ output "hub_vnetname" {
 
 output "firewall_private_ip" {
   description = "Firewall private IP"
-  value       = module.firewall.firewall_private_ip
+  value       = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 }
 
 output "tier1_subid" {

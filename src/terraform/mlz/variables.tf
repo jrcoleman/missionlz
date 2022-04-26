@@ -347,7 +347,7 @@ variable "tier0_rgname" {
 variable "tier0_vnetname" {
   description = "Virtual Network Name for the deployment"
   type        = string
-  default     = "identity-vnet"
+  default     = "vnet-identity"
 }
 
 variable "tier0_vnet_address_space" {
@@ -549,7 +549,7 @@ variable "tier2_rgname" {
 variable "tier2_vnetname" {
   description = "Virtual Network Name for the deployment"
   type        = string
-  default     = "sharedServices-vnet"
+  default     = "vnet-sharedServices"
 }
 
 variable "tier2_vnet_address_space" {
