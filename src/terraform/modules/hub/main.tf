@@ -8,7 +8,7 @@ module "hub-network" {
   vnet_name                           = var.vnet_name
   vnet_address_space                  = var.vnet_address_space
   log_analytics_workspace_resource_id = var.log_analytics_workspace_resource_id
-  create_log_storage = create_log_storage
+  create_log_storage = var.create_log_storage
   tags                                = var.tags
 }
 

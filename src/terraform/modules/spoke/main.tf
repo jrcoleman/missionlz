@@ -8,7 +8,7 @@ module "spoke-network" {
   vnet_name                           = var.spoke_vnetname
   vnet_address_space                  = var.spoke_vnet_address_space
   log_analytics_workspace_resource_id = var.laws_resource_id
-  create_log_storage = create_log_storage
+  create_log_storage = var.create_log_storage
 
   tags = var.tags
 }
@@ -35,7 +35,7 @@ module "subnets" {
   firewall_ip_address = var.firewall_private_ip
 
   log_analytics_storage_id            = module.spoke-network.log_analytics_storage_id
-  create_log_storage = create_log_storage
+  create_log_storage = var.create_log_storage
   log_analytics_workspace_id          = var.laws_workspace_id
   log_analytics_workspace_location    = var.laws_location
   log_analytics_workspace_resource_id = var.laws_resource_id
