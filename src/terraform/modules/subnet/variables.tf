@@ -1,11 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-variable "create_log_storage" {
-  type = bool
-  default = true
-}
-
 variable "name" {
   description = "The name of the subnet"
   type        = string
@@ -84,6 +79,7 @@ variable "firewall_ip_address" {
 variable "log_analytics_storage_id" {
   description = "The id of the storage account that stores log analytics diagnostic logs"
   type        = string
+  default = null
 }
 
 variable "log_analytics_workspace_id" {

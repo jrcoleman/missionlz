@@ -29,28 +29,28 @@ output "virtual_network_id" {
 
 output "firewall_client_subnet_name" {
   description = "Firewall client subnet name."
-  value       = azurerm_subnet.fw_client.name
+  value       = var.create_firewall ? azurerm_subnet.fw_client[0].name : null
 }
 
 output "firewall_management_subnet_name" {
   description = "Firewall management subnet name."
-  value       = azurerm_subnet.fw_mgmt.name
+  value       = var.create_firewall ? azurerm_subnet.fw_mgmt[0].name : null
 }
 
 output "firewall_client_subnet_id" {
   description = "Firewall client subnet ID."
-  value       = azurerm_subnet.fw_client.id
+  value       = var.create_firewall ? azurerm_subnet.fw_client[0].id : null
   sensitive = true
 }
 
 output "firewall_mgmt_subnet_id" {
   description = "Firewall management subnet ID."
-  value       = azurerm_subnet.fw_mgmt.id
+  value       = var.create_firewall ? azurerm_subnet.fw_mgmt[0].id : null
   sensitive = true
 }
 
 output "log_analytics_storage_id" {
   description = "Log Analytics Storage ID."
-  value       = var.create_log_storage ? module.hub-network.log_analytics_storage_id : ""
+  value       = var.create_log_storage ? module.hub-network.log_analytics_storage_id : null
   sensitive = true
 }

@@ -62,6 +62,6 @@ resource "azurerm_subnet_route_table_association" "routetable" {
     time_sleep.wait_30_seconds
   ]
 
-  subnet_id      = azurerm_subnet.fw_mgmt.id
-  route_table_id = azurerm_route_table.routetable.id
+  subnet_id      = azurerm_subnet.fw_mgmt[0].id
+  route_table_id = azurerm_route_table.routetable[0].id
 }

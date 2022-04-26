@@ -36,6 +36,6 @@ output "virtual_network_address_space" {
 
 output "log_analytics_storage_id" {
   description = "The id of the storage account that stores Log Analytics logs"
-  value       = var.create_log_storage ? azurerm_storage_account.loganalytics[0].id : ""
+  value       = var.create_log_storage ? azurerm_storage_account.loganalytics[0].id : null
   sensitive = true
 }

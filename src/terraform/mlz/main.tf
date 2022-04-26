@@ -573,7 +573,7 @@ module "jumpbox" {
   linux_offer         = var.jumpbox_linux_vm_offer
   linux_sku           = var.jumpbox_linux_vm_sku
   linux_image_version = var.jumpbox_linux_vm_version
-  tags                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}-${random_id.random.hex}" })
+  tags                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 
 #####################################
