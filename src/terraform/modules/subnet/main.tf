@@ -75,7 +75,7 @@ resource "azurerm_monitor_diagnostic_setting" "nsg" {
 
   name                       = "${azurerm_network_security_group.nsg.name}-nsg-diagnostics"
   target_resource_id         = azurerm_network_security_group.nsg.id
-  storage_account_id         = var.log_analytics_storage_id
+  storage_account_id         = var.create_log_storage ? var.log_analytics_storage_id : null
   log_analytics_workspace_id = var.log_analytics_workspace_resource_id
 
   dynamic "log" {

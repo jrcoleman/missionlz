@@ -317,6 +317,8 @@ module "hub-network" {
   vnet_address_space       = var.hub_vnet_address_space
   client_address_space     = var.hub_client_address_space
   management_address_space = var.hub_management_address_space
+  create_firewall = create_firewall
+  create_log_storage = create_log_storage
 
   log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
   tags                                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
@@ -363,6 +365,7 @@ module "spoke-network-t0" {
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
   laws_resource_id  = azurerm_log_analytics_workspace.laws.id
+  create_log_storage = create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier0.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier0_vnetname}-${var.resourceSuffix}"
@@ -407,6 +410,7 @@ module "spoke-network-t1" {
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
   laws_resource_id  = azurerm_log_analytics_workspace.laws.id
+  create_log_storage = create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier1.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier1_vnetname}-${var.resourceSuffix}"
@@ -451,6 +455,7 @@ module "spoke-network-t2" {
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
   laws_resource_id  = azurerm_log_analytics_workspace.laws.id
+  create_log_storage = create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier2.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier2_vnetname}-${var.resourceSuffix}"

@@ -1,6 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+variable "create_log_storage" {
+  type = bool
+  default = true
+}
+
 variable "location" {
   description = "The region for spoke network deployment"
   type        = string

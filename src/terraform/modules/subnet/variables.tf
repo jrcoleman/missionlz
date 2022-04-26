@@ -1,6 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+variable "create_log_storage" {
+  type = bool
+  default = true
+}
+
 variable "name" {
   description = "The name of the subnet"
   type        = string

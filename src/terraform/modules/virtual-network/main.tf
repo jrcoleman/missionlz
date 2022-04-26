@@ -17,6 +17,7 @@ resource "random_id" "storageaccount" {
 }
 
 resource "azurerm_storage_account" "loganalytics" {
+  count = var.create_log_storage ? 1 : 0
   name                      = format("%.24s", lower(replace("${azurerm_virtual_network.vnet.name}logs${random_id.storageaccount.id}", "/[[:^alnum:]]/", "")))
   resource_group_name       = var.resource_group_name
   location                  = var.location

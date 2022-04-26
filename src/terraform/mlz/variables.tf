@@ -42,6 +42,12 @@ variable "tags" {
   }
 }
 
+variable "create_log_storage" {
+  description = "Create storage account for each vNet to store network logs."
+  type = bool
+  default = true
+}
+
 #################################
 # Hub Configuration
 #################################
