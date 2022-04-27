@@ -48,6 +48,12 @@ variable "create_log_storage" {
   default = true
 }
 
+variable "flow_log_storage_id" {
+  description = "Storage account to ship nsg flow logs to"
+  type = string
+  default = null
+}
+
 #################################
 # Hub Configuration
 #################################

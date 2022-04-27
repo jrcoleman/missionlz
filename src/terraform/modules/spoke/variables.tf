@@ -11,6 +11,11 @@ variable "location" {
   type        = string
 }
 
+variable "flow_log_storage_id" {
+  type = string
+  default = null
+}
+
 variable "laws_location" {
   description = "Log Analytics Workspace location"
   type        = string

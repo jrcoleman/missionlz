@@ -80,6 +80,13 @@ variable "log_analytics_storage_id" {
   description = "The id of the storage account that stores log analytics diagnostic logs"
   type        = string
   default = null
+  sensitive = true
+}
+
+variable "flow_log_storage_id" {
+  type = string
+  default = null
+  sensitive = true
 }
 
 variable "log_analytics_workspace_id" {

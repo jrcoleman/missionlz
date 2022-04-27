@@ -519,6 +519,7 @@ module "jumpbox-subnet" {
   routetable_name     = var.jumpbox_subnet.routetable_name
   firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
+  flow_log_storage_id = var.flow_log_storage_id
   log_analytics_storage_id            = module.hub-network.log_analytics_storage_id
   log_analytics_workspace_id          = azurerm_log_analytics_workspace.laws.workspace_id
   log_analytics_workspace_location    = var.location

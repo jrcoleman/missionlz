@@ -93,13 +93,14 @@ resource "azurerm_monitor_diagnostic_setting" "nsg" {
 }
 
 resource "azurerm_network_watcher_flow_log" "nsgfl" {
+  count = var.flow_log_storage_id != null ? 1 : 0
   depends_on = [azurerm_network_security_rule.nsgrules, azurerm_network_security_group.nsg]
 
   network_watcher_name = "NetworkWatcher_${replace(var.location, " ", "")}"
   resource_group_name  = "NetworkWatcherRG"
 
   network_security_group_id = azurerm_network_security_group.nsg.id
-  storage_account_id        = var.log_analytics_storage_id
+  storage_account_id        = var.flow_log_storage_id
   enabled                   = true
   version                   = 2
 
