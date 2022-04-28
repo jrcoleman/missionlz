@@ -210,7 +210,7 @@ resource "azurerm_log_analytics_solution" "laws_sentinel" {
   tags = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 
-// Central Logging
+# Central Logging
 locals {
   log_categories = ["Administrative", "Security", "ServiceHealth", "Alert", "Recommendation", "Policy", "Autoscale", "ResourceHealth"]
 }
@@ -486,6 +486,18 @@ resource "azurerm_virtual_network_peering" "hub-to-t2" {
   remote_virtual_network_id    = module.spoke-network-t2.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+}
+
+# Private Link
+module "private_link" {
+  providers = { azurerm = azurerm.hub }
+  source = "../modules/private_link"
+
+  name = azurerm_log_analytics_workspace.laws.name
+  location = var.location
+  log_analytics_workspace_id = sensitive(azurerm_log_analytics_workspace.laws.id)
+  resource_group_name = azurerm_resource_group.hub.name
+  subnet_id = module.hub-network.subnet_ids[0]
 }
 
 ################################

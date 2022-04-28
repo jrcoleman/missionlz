@@ -32,6 +32,33 @@ variable "vnet_address_space" {
   type        = list(string)
 }
 
+variable "subnets" {
+  description = "A complex object that describes subnets for the spoke network"
+  type = map(object({
+    name              = string
+    address_prefixes  = list(string)
+    service_endpoints = list(string)
+
+    enforce_private_link_endpoint_network_policies = bool
+    enforce_private_link_service_network_policies  = bool
+
+    nsg_name = string
+    nsg_rules = map(object({
+      name                       = string
+      priority                   = string
+      direction                  = string
+      access                     = string
+      protocol                   = string
+      source_port_range          = string
+      destination_port_range     = string
+      source_address_prefix      = string
+      destination_address_prefix = string
+    }))
+
+    routetable_name = string
+  }))
+}
+
 variable "client_address_space" {
   description = "The address space to be used for the Firewall virtual network subnet used for client traffic."
   type        = string
