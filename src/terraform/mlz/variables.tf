@@ -109,8 +109,8 @@ variable "hub_subnets" {
     routetable_name = string
   }))
   default = {
-    "identitySubnet" = {
-      name              = "identitySubnet"
+    "hubSubnet" = {
+      name              = "hubSubnet"
       address_prefixes  = ["10.0.100.128/27"]
       service_endpoints = ["Microsoft.Storage"]
 

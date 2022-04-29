@@ -29,31 +29,21 @@ resource "azurerm_private_endpoint" "laws" {
   private_service_connection {
     name = "plconn${random_id.plscope.keepers.name}${random_id.plscope.hex}"
     is_manual_connection = false
-    private_connection_resource_id = azurerm_monitor_private_link_scope.id
+    private_connection_resource_id = azurerm_monitor_private_link_scope.global.id
     subresource_names = [
-      'azuremonitor',
+      "azuremonitor",
     ]
   }
 
   private_dns_zone_group {
-    name = 'monitor'
-    private_dns_zone_ids = azurerm_private_dns_zone.monitor.id
-  }
-  private_dns_zone_group {
-    name = 'oms'
-    private_dns_zone_ids = azurerm_private_dns_zone.oms_opinsights.id
-  }
-  private_dns_zone_group {
-    name = 'ods'
-    private_dns_zone_ids = azurerm_private_dns_zone.ods_opinsights.id
-  }
-  private_dns_zone_group {
-    name = 'agentsvc'
-    private_dns_zone_ids = azurerm_private_dns_zone.agentsvc.id
-  }
-  private_dns_zone_group {
-    name = 'storage'
-    private_dns_zone_ids = azurerm_private_dns_zone.blob.id
+    name = "default"
+    private_dns_zone_ids = [
+      azurerm_private_dns_zone.monitor.id,
+      azurerm_private_dns_zone.oms_opinsights.id,
+      azurerm_private_dns_zone.ods_opinsights.id,
+      azurerm_private_dns_zone.agentsvc.id,
+      azurerm_private_dns_zone.blob.id
+    ]
   }
 
   depends_on = [
@@ -91,7 +81,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "oms_opinsights" {
   private_dns_zone_name = azurerm_private_dns_zone.oms_opinsights.name
   virtual_network_id = var.vnet_id
   depends_on = [
-    azurerm_private_dns_zone.oms_opinsights
+    azurerm_private_dns_zone.oms_opinsights,
     azurerm_private_dns_zone_virtual_network_link.monitor
   ]
 }
@@ -108,7 +98,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "ods_opinsights" {
   private_dns_zone_name = azurerm_private_dns_zone.ods_opinsights.name
   virtual_network_id = var.vnet_id
   depends_on = [
-    azurerm_private_dns_zone.ods_opinsights
+    azurerm_private_dns_zone.ods_opinsights,
     azurerm_private_dns_zone_virtual_network_link.oms_opinsights
   ]
 }
@@ -125,7 +115,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "agentsvc" {
   private_dns_zone_name = azurerm_private_dns_zone.agentsvc.name
   virtual_network_id = var.vnet_id
   depends_on = [
-    azurerm_private_dns_zone.agentsvc
+    azurerm_private_dns_zone.agentsvc,
     azurerm_private_dns_zone_virtual_network_link.ods_opinsights
   ]
 }
@@ -142,7 +132,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
   private_dns_zone_name = azurerm_private_dns_zone.blob.name
   virtual_network_id = var.vnet_id
   depends_on = [
-    azurerm_private_dns_zone.blob
+    azurerm_private_dns_zone.blob,
     azurerm_private_dns_zone_virtual_network_link.agentsvc
   ]
 }

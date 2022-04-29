@@ -315,13 +315,45 @@ module "hub-network" {
   resource_group_name      = azurerm_resource_group.hub.name
   vnet_name                = "${var.resourcePrefix}-${var.hub_vnetname}-${var.resourceSuffix}"
   vnet_address_space       = var.hub_vnet_address_space
+
+  create_log_storage = var.create_log_storage
+
   client_address_space     = var.hub_client_address_space
   management_address_space = var.hub_management_address_space
   create_firewall = var.create_firewall
-  create_log_storage = var.create_log_storage
 
   log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
   tags                                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
+}
+
+module "hub-subnets" {
+  depends_on = [module.hub-network]
+  source     = "../modules/subnet"
+  for_each   = var.hub_subnets
+
+  name                 = each.value.name
+  location             = var.location
+  resource_group_name  = azurerm_resource_group.hub.name
+  virtual_network_name = module.hub-network.virtual_network_name
+  address_prefixes     = each.value.address_prefixes
+  service_endpoints    = lookup(each.value, "service_endpoints", [])
+
+  enforce_private_link_endpoint_network_policies = lookup(each.value, "enforce_private_link_endpoint_network_policies", null)
+  enforce_private_link_service_network_policies  = lookup(each.value, "enforce_private_link_service_network_policies", null)
+
+  nsg_name  = each.value.nsg_name
+  nsg_rules = each.value.nsg_rules
+
+  routetable_name     = each.value.routetable_name
+  firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
+
+  flow_log_storage_id = var.flow_log_storage_id
+  log_analytics_storage_id            = module.hub-network.log_analytics_storage_id
+  log_analytics_workspace_id          = azurerm_log_analytics_workspace.laws.workspace_id
+  log_analytics_workspace_location    = var.location
+  log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
+
+  tags = var.tags
 }
 
 module "firewall" {
@@ -491,13 +523,17 @@ resource "azurerm_virtual_network_peering" "hub-to-t2" {
 # Private Link
 module "private_link" {
   providers = { azurerm = azurerm.hub }
-  source = "../modules/private_link"
+  source = "../modules/private-link"
 
   name = azurerm_log_analytics_workspace.laws.name
   location = var.location
   log_analytics_workspace_id = sensitive(azurerm_log_analytics_workspace.laws.id)
   resource_group_name = azurerm_resource_group.hub.name
-  subnet_id = module.hub-network.subnet_ids[0]
+  vnet_id = module.hub-network.virtual_network_id
+  # JC Note: this is specific for the default subnet layout
+  subnet_id = module.hub-subnets["hubSubnet"].subnet_id
+
+  tags = var.tags
 }
 
 ################################

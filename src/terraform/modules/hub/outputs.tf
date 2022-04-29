@@ -27,12 +27,6 @@ output "virtual_network_id" {
   sensitive = true
 }
 
-output "subnet_ids" {
-  description = "The ids of the non firewall subnets"
-  value = module.subnets.*.subnet_id
-  sensitive = true
-}
-
 output "firewall_client_subnet_name" {
   description = "Firewall client subnet name."
   value       = var.create_firewall ? azurerm_subnet.fw_client[0].name : null

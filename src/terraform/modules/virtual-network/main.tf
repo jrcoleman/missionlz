@@ -13,12 +13,13 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "random_id" "storageaccount" {
+  count = var.create_log_storage ? 1 : 0
   byte_length = 12
 }
 
 resource "azurerm_storage_account" "loganalytics" {
   count = var.create_log_storage ? 1 : 0
-  name                      = format("%.24s", lower(replace("${azurerm_virtual_network.vnet.name}logs${random_id.storageaccount.id}", "/[[:^alnum:]]/", "")))
+  name                      = format("%.24s", lower(replace("${azurerm_virtual_network.vnet.name}logs${random_id.storageaccount[0].id}", "/[[:^alnum:]]/", "")))
   resource_group_name       = var.resource_group_name
   location                  = var.location
   account_kind              = "StorageV2"
