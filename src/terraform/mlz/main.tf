@@ -412,7 +412,7 @@ resource "azurerm_virtual_network_peering" "t0-to-hub" {
 
   name                         = "${var.tier0_vnetname}-to-${var.hub_vnetname}"
   resource_group_name          = azurerm_resource_group.tier0.name
-  virtual_network_name         = var.tier0_vnetname
+  virtual_network_name         = module.spoke-network-t0.virtual_network_name
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
@@ -424,7 +424,7 @@ resource "azurerm_virtual_network_peering" "hub-to-t0" {
 
   name                         = "${var.hub_vnetname}-to-${var.tier0_vnetname}"
   resource_group_name          = azurerm_resource_group.hub.name
-  virtual_network_name         = var.hub_vnetname
+  virtual_network_name         = module.hub-network.virtual_network_name
   remote_virtual_network_id    = module.spoke-network-t0.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
@@ -457,7 +457,7 @@ resource "azurerm_virtual_network_peering" "t1-to-hub" {
 
   name                         = "${var.tier1_vnetname}-to-${var.hub_vnetname}"
   resource_group_name          = azurerm_resource_group.tier1.name
-  virtual_network_name         = var.tier1_vnetname
+  virtual_network_name         = module.spoke-network-t1.virtual_network_name
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
@@ -469,7 +469,7 @@ resource "azurerm_virtual_network_peering" "hub-to-t1" {
 
   name                         = "${var.hub_vnetname}-to-${var.tier1_vnetname}"
   resource_group_name          = azurerm_resource_group.hub.name
-  virtual_network_name         = var.hub_vnetname
+  virtual_network_name         = module.hub-network.virtual_network_name
   remote_virtual_network_id    = module.spoke-network-t1.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
@@ -502,7 +502,7 @@ resource "azurerm_virtual_network_peering" "t2-to-hub" {
 
   name                         = "${var.tier2_vnetname}-to-${var.hub_vnetname}"
   resource_group_name          = azurerm_resource_group.tier2.name
-  virtual_network_name         = var.tier2_vnetname
+  virtual_network_name         = module.spoke-network-t2.virtual_network_name
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
@@ -514,7 +514,7 @@ resource "azurerm_virtual_network_peering" "hub-to-t2" {
 
   name                         = "${var.hub_vnetname}-to-${var.tier2_vnetname}"
   resource_group_name          = azurerm_resource_group.hub.name
-  virtual_network_name         = var.hub_vnetname
+  virtual_network_name         = module.hub-network.virtual_network_name
   remote_virtual_network_id    = module.spoke-network-t2.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true

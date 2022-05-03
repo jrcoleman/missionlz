@@ -6,3 +6,8 @@ output "virtual_network_id" {
   value       = module.spoke-network.virtual_network_id
   sensitive = true
 }
+
+output "virtual_network_name" {
+  description = "The name of the virtual network"
+  value = module.spoke-network.virtual_network_name
+}

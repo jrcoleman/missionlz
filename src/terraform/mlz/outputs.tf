@@ -44,3 +44,8 @@ output "laws_instance_id" {
   value = azurerm_log_analytics_workspace.laws.workspace_id
   sensitive = true
 }
+
+output "identity_rgname" {
+  description = "Resource Group for the Identity Subscription"
+  value = azurerm_resource_group.tier0.name
+}
