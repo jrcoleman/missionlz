@@ -221,6 +221,7 @@ resource "azurerm_monitor_diagnostic_setting" "hub-central" {
   target_resource_id = "/subscriptions/${var.hub_subid}"
 
   log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
+  # eventhub_name = azurerm_eventhub.activity.name
 
   dynamic "log" {
     for_each = local.log_categories

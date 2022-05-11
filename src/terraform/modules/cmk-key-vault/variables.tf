@@ -14,6 +14,7 @@ variable "identity_name" {
 variable "kv_name" {
   description = "Name of the key vault."
   type = string
+  sensitive = true
 }
 
 variable "tenant_id" {

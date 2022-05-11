@@ -24,6 +24,7 @@ variable "vnet_name" {
 variable "vnet_address_space" {
   description = "The address space to be used for the virtual network"
   type        = list(string)
+  sensitive = true
 }
 
 variable "log_analytics_workspace_resource_id" {

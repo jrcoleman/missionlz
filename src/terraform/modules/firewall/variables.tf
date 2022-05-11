@@ -31,6 +31,12 @@ variable "firewall_sku" {
   type        = string
 }
 
+variable "firewall_sku_name" {
+  description = "SKU name for Azure Firewall."
+  type = string
+  default = "AZFW_Hub"
+}
+
 variable "client_address_space" {
   description = "The address space to be used for the Firewall subnets"
   type        = string

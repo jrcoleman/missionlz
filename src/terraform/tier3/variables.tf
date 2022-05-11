@@ -37,6 +37,7 @@ variable "tags" {
 variable "hub_subid" {
   description = "Subscription ID for the Hub deployment"
   type        = string
+  sensitive = true
 }
 
 variable "hub_rgname" {
@@ -52,6 +53,7 @@ variable "hub_vnetname" {
 variable "firewall_private_ip" {
   description = "Firewall IP to bind network to"
   type        = string
+  sensitive = true
 }
 
 #################################
@@ -61,6 +63,7 @@ variable "firewall_private_ip" {
 variable "tier1_subid" {
   description = "Subscription ID for the Tier 1 deployment"
   type        = string
+  sensitive = true
 }
 
 variable "laws_name" {
@@ -79,6 +82,7 @@ variable "laws_rgname" {
 variable "tier3_subid" {
   description = "Subscription ID for this Tier 3 deployment"
   type        = string
+  sensitive = true
 }
 
 variable "tier3_rgname" {
@@ -97,6 +101,7 @@ variable "tier3_vnet_address_space" {
   description = "Address space prefixes list of strings"
   type        = list(string)
   default     = ["10.0.125.0/26"]
+  sensitive = true
 }
 
 variable "tier3_subnets" {

@@ -96,6 +96,7 @@ resource "azurerm_network_watcher_flow_log" "nsgfl" {
   count = var.flow_log_storage_id != null ? 1 : 0
   depends_on = [azurerm_network_security_rule.nsgrules, azurerm_network_security_group.nsg]
 
+  name                       = "${azurerm_network_security_group.nsg.name}-flow-log"
   network_watcher_name = "NetworkWatcher_${replace(var.location, " ", "")}"
   resource_group_name  = "NetworkWatcherRG"
 
