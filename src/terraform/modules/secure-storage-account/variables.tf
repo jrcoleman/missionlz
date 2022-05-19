@@ -23,15 +23,22 @@ variable "identity_id" {
   sensitive = true
 }
 
+# Optional Variables
+
+variable "create_private_endpoint" {
+  description = "Switch to create a private endpoint for the storage account."
+  type = string
+  sensitive = true
+  default = null
+}
+
+
 variable "endpoint_subnet_id" {
   description = "Id of subnet for the private endpoint."
   type = string
   sensitive = true
+  default = null
 }
-
-
-
-# Optional Variables
 
 variable "ip_network_rules" {
   description = "List of IP ranges to add to network rules."
@@ -40,9 +47,9 @@ variable "ip_network_rules" {
 }
 
 variable "subnet_id_network_rules" {
-  descrition = "List of subnet ids to add to network rules."
+  description = "List of subnet ids to add to network rules."
   type = list(string)
-  defualt = null
+  default = null
 }
 
 variable "subresource_names" {

@@ -109,3 +109,17 @@ variable "flow_log_retention_in_days" {
   default     = "7"
   type        = number
 }
+
+# Diagnostic Setting Variables
+variable "eventhub_namespace_authorization_rule_id" {
+  description = "Event Hub Authorization Rule to use for diagnostic settings." 
+  type = string
+  default = null
+  sensitive = true
+}
+
+variable "eventhub_name" {
+  description = "Event Hub Name to use for diagnostic settings."
+  type = string
+  default = null
+}

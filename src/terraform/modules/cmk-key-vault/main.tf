@@ -26,5 +26,5 @@ resource "azurerm_key_vault_access_policy" "cmk_identity" {
   key_vault_id = azurerm_key_vault.cmk.id
   tenant_id = var.tenant_id
   object_id = azurerm_user_assigned_identity.cmk.principal_id
-  key_permissions = ["get", "unwrapkey", "wrapkey"]
+  key_permissions = ["Get", "UnwrapKey", "WrapKey"]
 }

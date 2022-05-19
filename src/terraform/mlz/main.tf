@@ -221,7 +221,8 @@ resource "azurerm_monitor_diagnostic_setting" "hub-central" {
   target_resource_id = "/subscriptions/${var.hub_subid}"
 
   log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
-  # eventhub_name = azurerm_eventhub.activity.name
+  eventhub_name = var.eventhub_name_activity
+  eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
     for_each = local.log_categories
@@ -244,6 +245,8 @@ resource "azurerm_monitor_diagnostic_setting" "tier0-central" {
   target_resource_id = "/subscriptions/${var.tier0_subid}"
 
   log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_activity
+  eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
     for_each = local.log_categories
@@ -266,6 +269,8 @@ resource "azurerm_monitor_diagnostic_setting" "tier1-central" {
   target_resource_id = "/subscriptions/${var.tier1_subid}"
 
   log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_activity
+  eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
     for_each = local.log_categories
@@ -288,6 +293,8 @@ resource "azurerm_monitor_diagnostic_setting" "tier2-central" {
   target_resource_id = "/subscriptions/${var.tier2_subid}"
 
   log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_activity
+  eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
     for_each = local.log_categories
@@ -353,6 +360,8 @@ module "hub-subnets" {
   log_analytics_workspace_id          = azurerm_log_analytics_workspace.laws.workspace_id
   log_analytics_workspace_location    = var.location
   log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_logs
+  eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   tags = var.tags
 }
@@ -383,6 +392,9 @@ module "firewall" {
   management_publicip_name = var.management_publicip_name
 
   log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_logs
+  eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
+
   tags                                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 
@@ -398,6 +410,8 @@ module "spoke-network-t0" {
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
   laws_resource_id  = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_logs
+  eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
   create_log_storage = var.create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier0.name
@@ -443,6 +457,8 @@ module "spoke-network-t1" {
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
   laws_resource_id  = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_logs
+  eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
   create_log_storage = var.create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier1.name
@@ -488,6 +504,8 @@ module "spoke-network-t2" {
   laws_location     = var.location
   laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
   laws_resource_id  = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_logs
+  eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
   create_log_storage = var.create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier2.name
@@ -573,6 +591,9 @@ module "jumpbox-subnet" {
   log_analytics_workspace_id          = azurerm_log_analytics_workspace.laws.workspace_id
   log_analytics_workspace_location    = var.location
   log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
+  eventhub_name = var.eventhub_name_logs
+  eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
+
   tags                                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 

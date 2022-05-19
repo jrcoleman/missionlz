@@ -701,3 +701,23 @@ variable "tier2_subnets" {
     }
   }
 }
+
+# Diagnostic Setting Variables
+variable "eventhub_namespace_authorization_rule_id" {
+  description = "Event Hub Authorization Rule to use for diagnostic settings." 
+  type = string
+  default = null
+  sensitive = true
+}
+
+variable "eventhub_name_activity" {
+  description = "Event Hub Name to use for insights actvity."
+  type = string
+  default = null
+}
+
+variable "eventhub_name_logs" {
+  description = "Event Hub Name to use for logs."
+  type = string
+  default = null
+}

@@ -77,6 +77,8 @@ resource "azurerm_monitor_diagnostic_setting" "nsg" {
   target_resource_id         = azurerm_network_security_group.nsg.id
   storage_account_id         = var.log_analytics_storage_id
   log_analytics_workspace_id = var.log_analytics_workspace_resource_id
+  eventhub_name = var.eventhub_name
+  eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
     for_each = local.nsg_log_categories

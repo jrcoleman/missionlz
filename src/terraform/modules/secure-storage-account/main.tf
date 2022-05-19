@@ -48,9 +48,10 @@ resource "azurerm_storage_account_customer_managed_key" "cmk" {
   key_name = azurerm_key_vault_key.cmk.name
 }
 
-# Private Endpoint Resources
+# Optional Private Endpoint Resources
 
 resource "azurerm_private_endpoint" "secure" {
+  count = var.create_private_endpoint != null ? 1 : 0
   name = "${var.name}-private-endpoint"
   location = var.location
   resource_group_name = var.resource_group_name

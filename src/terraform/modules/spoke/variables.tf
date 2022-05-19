@@ -90,3 +90,17 @@ variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
 }
+
+# Diagnostic Setting Variables
+variable "eventhub_namespace_authorization_rule_id" {
+  description = "Event Hub Authorization Rule to use for diagnostic settings." 
+  type = string
+  default = null
+  sensitive = true
+}
+
+variable "eventhub_name" {
+  description = "Event Hub Name to use for diagnostic settings."
+  type = string
+  default = null
+}

@@ -94,6 +94,8 @@ resource "azurerm_monitor_diagnostic_setting" "firewall-diagnostics" {
   target_resource_id         = "/subscriptions/${var.sub_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/azureFirewalls/${var.firewall_name}"
   storage_account_id         = azurerm_storage_account.loganalytics.id
   log_analytics_workspace_id = var.log_analytics_workspace_resource_id
+  eventhub_name = var.eventhub_name
+  eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   log {
     category = "AzureFirewallApplicationRule"
@@ -138,6 +140,8 @@ resource "azurerm_monitor_diagnostic_setting" "publicip-diagnostics" {
   target_resource_id         = azurerm_public_ip.fw_client_pip.id
   storage_account_id         = azurerm_storage_account.loganalytics.id
   log_analytics_workspace_id = var.log_analytics_workspace_resource_id
+  eventhub_name = var.eventhub_name
+  eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   log {
     category = "DDoSProtectionNotifications"
