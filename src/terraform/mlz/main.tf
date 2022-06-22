@@ -139,7 +139,7 @@ locals {
 // }
 
 resource "azurerm_resource_group" "hub" {
-  provider   = azurerm.hub
+  provider = azurerm.hub
 
   location = var.location
   name     = "${var.resourcePrefix}-rg-${var.hub_rgname}-${var.resourceSuffix}"
@@ -147,7 +147,7 @@ resource "azurerm_resource_group" "hub" {
 }
 
 resource "azurerm_resource_group" "tier0" {
-  provider   = azurerm.tier0
+  provider = azurerm.tier0
 
   location = var.location
   name     = "${var.resourcePrefix}-rg-${var.tier0_rgname}-${var.resourceSuffix}"
@@ -155,7 +155,7 @@ resource "azurerm_resource_group" "tier0" {
 }
 
 resource "azurerm_resource_group" "tier1" {
-  provider   = azurerm.tier1
+  provider = azurerm.tier1
 
   location = var.location
   name     = "${var.resourcePrefix}-rg-${var.tier1_rgname}-${var.resourceSuffix}"
@@ -163,7 +163,7 @@ resource "azurerm_resource_group" "tier1" {
 }
 
 resource "azurerm_resource_group" "tier2" {
-  provider   = azurerm.tier2
+  provider = azurerm.tier2
 
   location = var.location
   name     = "${var.resourcePrefix}-rg-${var.tier2_rgname}-${var.resourceSuffix}"
@@ -183,7 +183,7 @@ resource "azurerm_resource_group" "tier2" {
 // }
 
 resource "azurerm_log_analytics_workspace" "laws" {
-  provider   = azurerm.tier1
+  provider = azurerm.tier1
 
   name                = "${var.resourcePrefix}-${var.log_analytics_workspace_name}-${var.resourceSuffix}"
   resource_group_name = azurerm_resource_group.tier1.name
@@ -220,8 +220,8 @@ resource "azurerm_monitor_diagnostic_setting" "hub-central" {
   name               = "hub-central-diagnostics"
   target_resource_id = "/subscriptions/${var.hub_subid}"
 
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_activity
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                  = var.eventhub_name_activity
   eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
@@ -244,8 +244,8 @@ resource "azurerm_monitor_diagnostic_setting" "tier0-central" {
   name               = "tier0-central-diagnostics"
   target_resource_id = "/subscriptions/${var.tier0_subid}"
 
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_activity
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                  = var.eventhub_name_activity
   eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
@@ -268,8 +268,8 @@ resource "azurerm_monitor_diagnostic_setting" "tier1-central" {
   name               = "tier1-central-diagnostics"
   target_resource_id = "/subscriptions/${var.tier1_subid}"
 
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_activity
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                  = var.eventhub_name_activity
   eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
@@ -292,8 +292,8 @@ resource "azurerm_monitor_diagnostic_setting" "tier2-central" {
   name               = "tier2-central-diagnostics"
   target_resource_id = "/subscriptions/${var.tier2_subid}"
 
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_activity
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                  = var.eventhub_name_activity
   eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
@@ -319,16 +319,16 @@ module "hub-network" {
   depends_on = [azurerm_resource_group.hub]
   source     = "../modules/hub"
 
-  location                 = var.location
-  resource_group_name      = azurerm_resource_group.hub.name
-  vnet_name                = "${var.resourcePrefix}-${var.hub_vnetname}-${var.resourceSuffix}"
-  vnet_address_space       = var.hub_vnet_address_space
+  location            = var.location
+  resource_group_name = azurerm_resource_group.hub.name
+  vnet_name           = "${var.resourcePrefix}-${var.hub_vnetname}-${var.resourceSuffix}"
+  vnet_address_space  = var.hub_vnet_address_space
 
   create_log_storage = var.create_log_storage
 
   client_address_space     = var.hub_client_address_space
   management_address_space = var.hub_management_address_space
-  create_firewall = var.create_firewall
+  create_firewall          = var.create_firewall
 
   log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
   tags                                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
@@ -355,19 +355,19 @@ module "hub-subnets" {
   routetable_name     = each.value.routetable_name
   firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
-  flow_log_storage_id = var.flow_log_storage_id
-  log_analytics_storage_id            = module.hub-network.log_analytics_storage_id
-  log_analytics_workspace_id          = azurerm_log_analytics_workspace.laws.workspace_id
-  log_analytics_workspace_location    = var.location
-  log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_logs
+  flow_log_storage_id                      = var.flow_log_storage_id
+  log_analytics_storage_id                 = module.hub-network.log_analytics_storage_id
+  log_analytics_workspace_id               = azurerm_log_analytics_workspace.laws.workspace_id
+  log_analytics_workspace_location         = var.location
+  log_analytics_workspace_resource_id      = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   tags = var.tags
 }
 
 module "firewall" {
-  count = var.create_firewall ? 1 : 0
+  count      = var.create_firewall ? 1 : 0
   providers  = { azurerm = azurerm.hub }
   depends_on = [azurerm_resource_group.hub, module.hub-network]
   source     = "../modules/firewall"
@@ -391,11 +391,11 @@ module "firewall" {
   management_ipconfig_name = var.management_ipconfig_name
   management_publicip_name = var.management_publicip_name
 
-  log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_logs
+  log_analytics_workspace_resource_id      = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
-  tags                                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
+  tags = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 
 module "spoke-network-t0" {
@@ -407,12 +407,12 @@ module "spoke-network-t0" {
 
   firewall_private_ip = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
-  laws_location     = var.location
-  laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
-  laws_resource_id  = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_logs
+  laws_location                            = var.location
+  laws_workspace_id                        = azurerm_log_analytics_workspace.laws.workspace_id
+  laws_resource_id                         = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
-  create_log_storage = var.create_log_storage
+  create_log_storage                       = var.create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier0.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier0_vnetname}-${var.resourceSuffix}"
@@ -431,6 +431,7 @@ resource "azurerm_virtual_network_peering" "t0-to-hub" {
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t0" {
@@ -443,6 +444,7 @@ resource "azurerm_virtual_network_peering" "hub-to-t0" {
   remote_virtual_network_id    = module.spoke-network-t0.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  allow_gateway_transit        = true
 }
 
 module "spoke-network-t1" {
@@ -454,12 +456,12 @@ module "spoke-network-t1" {
 
   firewall_private_ip = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
-  laws_location     = var.location
-  laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
-  laws_resource_id  = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_logs
+  laws_location                            = var.location
+  laws_workspace_id                        = azurerm_log_analytics_workspace.laws.workspace_id
+  laws_resource_id                         = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
-  create_log_storage = var.create_log_storage
+  create_log_storage                       = var.create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier1.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier1_vnetname}-${var.resourceSuffix}"
@@ -478,6 +480,7 @@ resource "azurerm_virtual_network_peering" "t1-to-hub" {
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t1" {
@@ -490,6 +493,7 @@ resource "azurerm_virtual_network_peering" "hub-to-t1" {
   remote_virtual_network_id    = module.spoke-network-t1.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  allow_gateway_transit        = true
 }
 
 module "spoke-network-t2" {
@@ -501,12 +505,12 @@ module "spoke-network-t2" {
 
   firewall_private_ip = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
-  laws_location     = var.location
-  laws_workspace_id = azurerm_log_analytics_workspace.laws.workspace_id
-  laws_resource_id  = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_logs
+  laws_location                            = var.location
+  laws_workspace_id                        = azurerm_log_analytics_workspace.laws.workspace_id
+  laws_resource_id                         = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
-  create_log_storage = var.create_log_storage
+  create_log_storage                       = var.create_log_storage
 
   spoke_rgname             = azurerm_resource_group.tier2.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier2_vnetname}-${var.resourceSuffix}"
@@ -525,6 +529,7 @@ resource "azurerm_virtual_network_peering" "t2-to-hub" {
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t2" {
@@ -537,18 +542,19 @@ resource "azurerm_virtual_network_peering" "hub-to-t2" {
   remote_virtual_network_id    = module.spoke-network-t2.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  allow_gateway_transit        = true
 }
 
 # Private Link
 module "private_link" {
   providers = { azurerm = azurerm.hub }
-  source = "../modules/private-link"
+  source    = "../modules/private-link"
 
-  name = azurerm_log_analytics_workspace.laws.name
-  location = var.location
+  name                       = azurerm_log_analytics_workspace.laws.name
+  location                   = var.location
   log_analytics_workspace_id = sensitive(azurerm_log_analytics_workspace.laws.id)
-  resource_group_name = azurerm_resource_group.hub.name
-  vnet_id = module.hub-network.virtual_network_id
+  resource_group_name        = azurerm_resource_group.hub.name
+  vnet_id                    = module.hub-network.virtual_network_id
   # JC Note: this is specific for the default subnet layout
   subnet_id = module.hub-subnets["hubSubnet"].subnet_id
 
@@ -586,15 +592,15 @@ module "jumpbox-subnet" {
   routetable_name     = var.jumpbox_subnet.routetable_name
   firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
-  flow_log_storage_id = var.flow_log_storage_id
-  log_analytics_storage_id            = module.hub-network.log_analytics_storage_id
-  log_analytics_workspace_id          = azurerm_log_analytics_workspace.laws.workspace_id
-  log_analytics_workspace_location    = var.location
-  log_analytics_workspace_resource_id = azurerm_log_analytics_workspace.laws.id
-  eventhub_name = var.eventhub_name_logs
+  flow_log_storage_id                      = var.flow_log_storage_id
+  log_analytics_storage_id                 = module.hub-network.log_analytics_storage_id
+  log_analytics_workspace_id               = azurerm_log_analytics_workspace.laws.workspace_id
+  log_analytics_workspace_location         = var.location
+  log_analytics_workspace_resource_id      = azurerm_log_analytics_workspace.laws.id
+  eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
-  tags                                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
+  tags = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 
 module "bastion-host" {

@@ -151,6 +151,7 @@ resource "azurerm_virtual_network_peering" "t3-to-hub" {
   remote_virtual_network_id    = sensitive(data.azurerm_virtual_network.hub.id)
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t3" {
@@ -163,4 +164,5 @@ resource "azurerm_virtual_network_peering" "hub-to-t3" {
   remote_virtual_network_id    = module.spoke-network-t3.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  allow_gateway_transit        = true
 }
