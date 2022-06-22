@@ -43,7 +43,7 @@ resource "azurerm_subnet_network_security_group_association" "nsg" {
 }
 
 resource "azurerm_route_table" "routetable" {
-  count = var.firewall_ip_address != "" ? 1 : 0
+  count               = var.firewall_ip_address != "" ? 1 : 0
   name                = var.routetable_name
   resource_group_name = azurerm_subnet.subnet.resource_group_name
   location            = var.location
@@ -51,7 +51,7 @@ resource "azurerm_route_table" "routetable" {
 }
 
 resource "azurerm_route" "routetable" {
-  count = var.firewall_ip_address != "" ? 1 : 0
+  count                  = var.firewall_ip_address != "" ? 1 : 0
   name                   = "default_route"
   resource_group_name    = azurerm_route_table.routetable[0].resource_group_name
   route_table_name       = azurerm_route_table.routetable[0].name
@@ -61,7 +61,7 @@ resource "azurerm_route" "routetable" {
 }
 
 resource "azurerm_subnet_route_table_association" "routetable" {
-  count = var.firewall_ip_address != "" ? 1 : 0
+  count          = var.firewall_ip_address != "" ? 1 : 0
   subnet_id      = azurerm_subnet.subnet.id
   route_table_id = azurerm_route_table.routetable[0].id
 }
@@ -73,11 +73,12 @@ locals {
 resource "azurerm_monitor_diagnostic_setting" "nsg" {
   depends_on = [azurerm_network_security_group.nsg]
 
-  name                       = "${azurerm_network_security_group.nsg.name}-nsg-diagnostics"
-  target_resource_id         = azurerm_network_security_group.nsg.id
-  storage_account_id         = var.log_analytics_storage_id
-  log_analytics_workspace_id = var.log_analytics_workspace_resource_id
-  eventhub_name = var.eventhub_name
+  name               = "${azurerm_network_security_group.nsg.name}-nsg-diagnostics"
+  target_resource_id = azurerm_network_security_group.nsg.id
+  # JC Note: Switch to only centralized log storage
+  # storage_account_id             = var.log_analytics_storage_id
+  log_analytics_workspace_id     = var.log_analytics_workspace_resource_id
+  eventhub_name                  = var.eventhub_name
   eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   dynamic "log" {
@@ -95,10 +96,9 @@ resource "azurerm_monitor_diagnostic_setting" "nsg" {
 }
 
 resource "azurerm_network_watcher_flow_log" "nsgfl" {
-  count = var.flow_log_storage_id != null ? 1 : 0
   depends_on = [azurerm_network_security_rule.nsgrules, azurerm_network_security_group.nsg]
 
-  name                       = "${azurerm_network_security_group.nsg.name}-flow-log"
+  name                 = "${azurerm_network_security_group.nsg.name}-flow-log"
   network_watcher_name = "NetworkWatcher_${replace(var.location, " ", "")}"
   resource_group_name  = "NetworkWatcherRG"
 

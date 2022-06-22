@@ -8,12 +8,11 @@ module "hub-network" {
   vnet_name                           = var.vnet_name
   vnet_address_space                  = var.vnet_address_space
   log_analytics_workspace_resource_id = var.log_analytics_workspace_resource_id
-  create_log_storage = var.create_log_storage
   tags                                = var.tags
 }
 
 resource "azurerm_subnet" "fw_client" {
-  count = var.create_firewall ? 1 : 0
+  count                = var.create_firewall ? 1 : 0
   name                 = "AzureFirewallSubnet"
   resource_group_name  = module.hub-network.resource_group_name
   virtual_network_name = module.hub-network.virtual_network_name
@@ -21,7 +20,7 @@ resource "azurerm_subnet" "fw_client" {
 }
 
 resource "azurerm_subnet" "fw_mgmt" {
-  count = var.create_firewall ? 1 : 0
+  count                = var.create_firewall ? 1 : 0
   name                 = "AzureFirewallManagementSubnet"
   resource_group_name  = module.hub-network.resource_group_name
   virtual_network_name = module.hub-network.virtual_network_name
@@ -29,7 +28,7 @@ resource "azurerm_subnet" "fw_mgmt" {
 }
 
 resource "azurerm_route_table" "routetable" {
-  count = var.create_firewall ? 1 : 0
+  count                         = var.create_firewall ? 1 : 0
   name                          = "FirewallRouteTable"
   resource_group_name           = azurerm_subnet.fw_mgmt[0].resource_group_name
   location                      = var.location
@@ -38,7 +37,7 @@ resource "azurerm_route_table" "routetable" {
 }
 
 resource "azurerm_route" "default_route" {
-  count = var.create_firewall ? 1 : 0
+  count               = var.create_firewall ? 1 : 0
   name                = "FirewallDefaultRoute"
   resource_group_name = azurerm_route_table.routetable[0].resource_group_name
   route_table_name    = "FirewallRouteTable"

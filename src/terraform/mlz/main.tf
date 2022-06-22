@@ -324,8 +324,6 @@ module "hub-network" {
   vnet_name           = "${var.resourcePrefix}-${var.hub_vnetname}-${var.resourceSuffix}"
   vnet_address_space  = var.hub_vnet_address_space
 
-  create_log_storage = var.create_log_storage
-
   client_address_space     = var.hub_client_address_space
   management_address_space = var.hub_management_address_space
   create_firewall          = var.create_firewall
@@ -355,8 +353,9 @@ module "hub-subnets" {
   routetable_name     = each.value.routetable_name
   firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
-  flow_log_storage_id                      = var.flow_log_storage_id
-  log_analytics_storage_id                 = module.hub-network.log_analytics_storage_id
+  flow_log_storage_id = var.flow_log_storage_id
+  # JC Note: Using centralized log storage
+  # log_analytics_storage_id                 = module.hub-network.log_analytics_storage_id
   log_analytics_workspace_id               = azurerm_log_analytics_workspace.laws.workspace_id
   log_analytics_workspace_location         = var.location
   log_analytics_workspace_resource_id      = azurerm_log_analytics_workspace.laws.id
@@ -412,7 +411,7 @@ module "spoke-network-t0" {
   laws_resource_id                         = azurerm_log_analytics_workspace.laws.id
   eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
-  create_log_storage                       = var.create_log_storage
+  flow_log_storage_id                      = var.flow_log_storage_id
 
   spoke_rgname             = azurerm_resource_group.tier0.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier0_vnetname}-${var.resourceSuffix}"
@@ -461,7 +460,7 @@ module "spoke-network-t1" {
   laws_resource_id                         = azurerm_log_analytics_workspace.laws.id
   eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
-  create_log_storage                       = var.create_log_storage
+  flow_log_storage_id                      = var.flow_log_storage_id
 
   spoke_rgname             = azurerm_resource_group.tier1.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier1_vnetname}-${var.resourceSuffix}"
@@ -510,7 +509,7 @@ module "spoke-network-t2" {
   laws_resource_id                         = azurerm_log_analytics_workspace.laws.id
   eventhub_name                            = var.eventhub_name_logs
   eventhub_namespace_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
-  create_log_storage                       = var.create_log_storage
+  flow_log_storage_id                      = var.flow_log_storage_id
 
   spoke_rgname             = azurerm_resource_group.tier2.name
   spoke_vnetname           = "${var.resourcePrefix}-${var.tier2_vnetname}-${var.resourceSuffix}"
@@ -592,8 +591,9 @@ module "jumpbox-subnet" {
   routetable_name     = var.jumpbox_subnet.routetable_name
   firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
-  flow_log_storage_id                      = var.flow_log_storage_id
-  log_analytics_storage_id                 = module.hub-network.log_analytics_storage_id
+  flow_log_storage_id = var.flow_log_storage_id
+  # JC Note: Using centralized log storage
+  # log_analytics_storage_id                 = module.hub-network.log_analytics_storage_id
   log_analytics_workspace_id               = azurerm_log_analytics_workspace.laws.workspace_id
   log_analytics_workspace_location         = var.location
   log_analytics_workspace_resource_id      = azurerm_log_analytics_workspace.laws.id

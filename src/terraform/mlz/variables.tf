@@ -30,8 +30,8 @@ variable "resourcePrefix" {
 
 variable "resourceSuffix" {
   description = "Suffix for resource names."
-  type = string
-  default = "mlz"
+  type        = string
+  default     = "mlz"
 }
 
 variable "tags" {
@@ -42,16 +42,10 @@ variable "tags" {
   }
 }
 
-variable "create_log_storage" {
-  description = "Create storage account for each vNet to store network logs."
-  type = bool
-  default = true
-}
-
 variable "flow_log_storage_id" {
   description = "Storage account to ship nsg flow logs to"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 #################################
@@ -61,7 +55,7 @@ variable "flow_log_storage_id" {
 variable "hub_subid" {
   description = "Subscription ID for the Hub deployment"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "hub_rgname" {
@@ -80,7 +74,7 @@ variable "hub_vnet_address_space" {
   description = "The address space to be used for the virtual network."
   type        = list(string)
   default     = ["10.0.100.0/24"]
-  sensitive = true
+  sensitive   = true
 }
 
 variable "hub_subnets" {
@@ -155,28 +149,28 @@ variable "hub_subnets" {
 
 variable "create_firewall" {
   description = "Create a firewall?"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "custom_firewall_ip" {
   description = "IP address of customer firewall solution."
-  default = ""
-  type = string
+  default     = ""
+  type        = string
 }
 
 variable "hub_client_address_space" {
   description = "The address space to be used for the Firewall virtual network."
   type        = string
   default     = "10.0.100.0/26"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "hub_management_address_space" {
   description = "The address space to be used for the Firewall virtual network subnet used for management traffic."
   type        = string
   default     = "10.0.100.64/26"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "firewall_name" {
@@ -235,7 +229,7 @@ variable "bastion_address_space" {
   description = "The address space to be used for the Bastion Host subnet (must be /27 or larger)."
   type        = string
   default     = "10.0.100.128/27"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "bastion_public_ip_name" {
@@ -413,7 +407,7 @@ variable "tier0_subid" {
   description = "Subscription ID for the deployment"
   type        = string
   default     = ""
-  sensitive = true
+  sensitive   = true
 }
 
 variable "tier0_rgname" {
@@ -432,7 +426,7 @@ variable "tier0_vnet_address_space" {
   description = "Address space prefixes list of strings"
   type        = list(string)
   default     = ["10.0.110.0/26"]
-  sensitive = true
+  sensitive   = true
 }
 
 variable "tier0_subnets" {
@@ -508,7 +502,7 @@ variable "tier1_subid" {
   description = "Subscription ID for the deployment"
   type        = string
   default     = ""
-  sensitive = true
+  sensitive   = true
 }
 
 variable "tier1_rgname" {
@@ -539,7 +533,7 @@ variable "tier1_vnet_address_space" {
   description = "Address space prefixes for the virtual network"
   type        = list(string)
   default     = ["10.0.115.0/26"]
-  sensitive = true
+  sensitive   = true
 }
 
 variable "tier1_subnets" {
@@ -615,7 +609,7 @@ variable "tier2_subid" {
   description = "Subscription ID for the deployment"
   type        = string
   default     = ""
-  sensitive = true
+  sensitive   = true
 }
 
 variable "tier2_rgname" {
@@ -634,7 +628,7 @@ variable "tier2_vnet_address_space" {
   description = "Address space prefixes list of strings"
   type        = list(string)
   default     = ["10.0.120.0/26"]
-  sensitive = true
+  sensitive   = true
 }
 
 variable "tier2_subnets" {
@@ -704,20 +698,20 @@ variable "tier2_subnets" {
 
 # Diagnostic Setting Variables
 variable "eventhub_namespace_authorization_rule_id" {
-  description = "Event Hub Authorization Rule to use for diagnostic settings." 
-  type = string
-  default = null
-  sensitive = true
+  description = "Event Hub Authorization Rule to use for diagnostic settings."
+  type        = string
+  default     = null
+  sensitive   = true
 }
 
 variable "eventhub_name_activity" {
   description = "Event Hub Name to use for insights actvity."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "eventhub_name_logs" {
   description = "Event Hub Name to use for logs."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }

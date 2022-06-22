@@ -1,19 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-variable "create_log_storage" {
-  type = bool
-  default = true
-}
-
 variable "location" {
   description = "The region for spoke network deployment"
   type        = string
 }
 
 variable "flow_log_storage_id" {
-  type = string
-  default = null
+  type      = string
+  default   = null
   sensitive = true
 }
 
@@ -25,19 +20,19 @@ variable "laws_location" {
 variable "laws_workspace_id" {
   description = "Log Analytics Workspace workspace ID"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "laws_resource_id" {
   description = "Log Analytics Workspace Azure Resource ID"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "firewall_private_ip" {
   description = "Private IP of the Firewall"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "spoke_rgname" {
@@ -56,7 +51,7 @@ variable "spoke_vnetname" {
 variable "spoke_vnet_address_space" {
   description = "Address space prefixes for the spoke network"
   type        = list(string)
-  sensitive = true
+  sensitive   = true
 }
 
 variable "subnets" {
@@ -93,14 +88,14 @@ variable "tags" {
 
 # Diagnostic Setting Variables
 variable "eventhub_namespace_authorization_rule_id" {
-  description = "Event Hub Authorization Rule to use for diagnostic settings." 
-  type = string
-  default = null
-  sensitive = true
+  description = "Event Hub Authorization Rule to use for diagnostic settings."
+  type        = string
+  default     = null
+  sensitive   = true
 }
 
 variable "eventhub_name" {
   description = "Event Hub Name to use for diagnostic settings."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
