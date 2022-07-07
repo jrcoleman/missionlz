@@ -1,11 +1,15 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+locals {
+  nsg_log_categories = ["NetworkSecurityGroupEvent", "NetworkSecurityGroupRuleCounter"]
+}
+
 resource "azurerm_subnet" "subnet" {
   name                 = var.name
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.virtual_network_name
-  address_prefixes     = var.address_prefixes
+  address_prefixes     = sensitive(var.address_prefixes)
 
   service_endpoints = var.service_endpoints
 
@@ -29,10 +33,10 @@ resource "azurerm_network_security_rule" "nsgrules" {
   direction                   = each.value.direction
   access                      = each.value.access
   protocol                    = each.value.protocol
-  source_port_range           = each.value.source_port_range != "" ? each.value.source_port_range : "*"
-  destination_port_range      = each.value.destination_port_range != "" ? each.value.destination_port_range : "*"
-  source_address_prefix       = each.value.source_address_prefix != "" ? each.value.source_address_prefix : "*"
-  destination_address_prefix  = each.value.destination_address_prefix != "" ? each.value.destination_address_prefix : "*"
+  source_port_ranges          = each.value.source_port_ranges
+  destination_port_ranges     = each.value.destination_port_ranges
+  source_address_prefix       = sensitive(each.value.source_address_prefixes)
+  destination_address_prefix  = sensitive(each.value.destination_address_prefixes)
   resource_group_name         = azurerm_network_security_group.nsg.resource_group_name
   network_security_group_name = azurerm_network_security_group.nsg.name
 }
@@ -64,10 +68,6 @@ resource "azurerm_subnet_route_table_association" "routetable" {
   count          = var.firewall_ip_address != "" ? 1 : 0
   subnet_id      = azurerm_subnet.subnet.id
   route_table_id = azurerm_route_table.routetable[0].id
-}
-
-locals {
-  nsg_log_categories = ["NetworkSecurityGroupEvent", "NetworkSecurityGroupRuleCounter"]
 }
 
 resource "azurerm_monitor_diagnostic_setting" "nsg" {

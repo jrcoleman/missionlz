@@ -11,10 +11,40 @@ variable "location" {
   type = string
 }
 
-variable "key_vault_id" {
-  description = "Id of the key vault for CMK encrpyption."
+variable "tier0_subid" {
+  description = "Subscription ID for the deployment"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "environment" {
+  description = "The Terraform backend environment e.g. public or usgovernment"
+  type        = string
+  default     = "public"
+}
+
+variable "metadata_host" {
+  description = "The metadata host for the Azure Cloud e.g. management.azure.com or management.usgovcloudapi.net."
+  type        = string
+  default     = "management.azure.com"
+}
+
+variable "key_vault_name" {
+  description = "Name of the key vault for CMK encryption."
   type        = string
   sensitive   = true
+}
+
+# variable "key_vault_id" {
+#   description = "Id of the key vault for CMK encrpyption."
+#   type        = string
+#   sensitive   = true
+# }
+
+variable "key_vault_rg" {
+  description = "Resource Group Name of the Key Vault."
+  type        = string
 }
 
 variable "identity_id" {

@@ -1,4 +1,4 @@
-# Create CMK Key Vault and User assigned identityS
+# Create CMK Key Vault and User assigned identity
 
 resource "azurerm_user_assigned_identity" "cmk" {
   name                = var.identity_name
@@ -17,12 +17,14 @@ resource "azurerm_key_vault" "cmk" {
   tenant_id                       = var.tenant_id
   purge_protection_enabled        = true
   soft_delete_retention_days      = 90
+  enable_rbac_authorization       = true
   tags                            = var.tags
 }
 
-resource "azurerm_key_vault_access_policy" "cmk_identity" {
-  key_vault_id    = azurerm_key_vault.cmk.id
-  tenant_id       = var.tenant_id
-  object_id       = azurerm_user_assigned_identity.cmk.principal_id
-  key_permissions = ["Get", "UnwrapKey", "WrapKey"]
+resource "azurerm_role_assignment" "cmk_identity" {
+  scope                = azurerm_key_vault.cmk.id
+  principal_id         = azurerm_user_assigned_identity.cmk.principal_id
+  role_definition_name = "Key Vault Crypto Service Encryption User"
 }
+
+# Need to ensure that RBAC Assignement for Key Vault Administrator is set for this.

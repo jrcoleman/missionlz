@@ -1,14 +1,76 @@
 # Create an encrypted and secured storage account using a cmk
 
+# Providers
+
+provider "azurerm" {
+  alias           = "tier0"
+  environment     = var.environment
+  metadata_host   = var.metadata_host
+  subscription_id = var.tier0_subid
+
+  features {
+    log_analytics_workspace {
+      permanently_delete_on_destroy = true
+    }
+    key_vault {
+      purge_soft_delete_on_destroy = true
+    }
+  }
+}
+
 # CMK Resources
 
+data "azurerm_key_vault" "cmk" {
+  provider            = azurerm.tier0
+  name                = var.key_vault_name
+  resource_group_name = var.key_vault_rg
+}
+
 resource "azurerm_key_vault_key" "cmk" {
+  provider     = azurerm.tier0
   name         = "${var.name}-cmk"
-  key_vault_id = var.key_vault_id
+  key_vault_id = sensitive(data.azurerm_key_vault.cmk.id)
   key_type     = var.key_type
   key_size     = var.key_size
   key_opts     = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
   tags         = var.tags
+}
+
+# JC Note: This is required to set the Rotation Policy This will be swapped for a proper resource when available.
+resource "null_resource" "cmk-rotation-policy" {
+  triggers = {
+    ckm_id = azurerm_key_vault_key.cmk.id
+  }
+  provisioner "local-exec" {
+    command = <<EOT
+az keyvault key rotation-policy update --vault-name ${var.key_vault_name} `
+--name ${azurerm_key_vault_key.cmk.name} `
+--value "
+{
+  "lifetimeActions": [
+    {
+      "trigger": {
+        "timeAfterCreate": "P90D",
+        "timeBeforeExpiry" : null
+      },
+      "action": {
+        "type": "Rotate"
+      }
+    },
+    {
+      "trigger": {
+        "timeBeforeExpiry" : "P30D"
+      },
+      "action": {
+        "type": "Notify"
+      }
+    }
+  ],
+  "attributes": {
+    "expiryTime": "P2Y"
+}"
+    EOT
+  }
 }
 
 # Storage Account Resources
@@ -47,9 +109,10 @@ resource "azurerm_storage_account_network_rules" "secure" {
 }
 
 resource "azurerm_storage_account_customer_managed_key" "cmk" {
-  storage_account_id = sensitive(azurerm_storage_account.secure.id)
-  key_vault_id       = var.key_vault_id
-  key_name           = azurerm_key_vault_key.cmk.name
+  storage_account_id        = sensitive(azurerm_storage_account.secure.id)
+  key_vault_id              = sensitive(data.azurerm_key_vault.cmk.id)
+  key_name                  = azurerm_key_vault_key.cmk.name
+  user_assigned_identity_id = var.identity_id
 }
 
 # JC Note: In progress

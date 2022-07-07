@@ -130,9 +130,10 @@ module "spoke-network-t3" {
 
   firewall_private_ip = var.firewall_private_ip
 
-  laws_location     = var.location
-  laws_workspace_id = sensitive(data.azurerm_log_analytics_workspace.laws.workspace_id)
-  laws_resource_id  = sensitive(data.azurerm_log_analytics_workspace.laws.id)
+  laws_location       = var.location
+  laws_workspace_id   = sensitive(data.azurerm_log_analytics_workspace.laws.workspace_id)
+  laws_resource_id    = sensitive(data.azurerm_log_analytics_workspace.laws.id)
+  flow_log_storage_id = var.flow_log_storage_id
 
   spoke_rgname             = azurerm_resource_group.tier3.name
   spoke_vnetname           = var.tier3_vnetname
@@ -141,6 +142,7 @@ module "spoke-network-t3" {
   tags                     = var.tags
 }
 
+# JC Note: Re enable gateway transit once ExpressRoute Gateway is present.
 resource "azurerm_virtual_network_peering" "t3-to-hub" {
   provider   = azurerm.tier3
   depends_on = [azurerm_resource_group.tier3, module.spoke-network-t3]
@@ -151,7 +153,7 @@ resource "azurerm_virtual_network_peering" "t3-to-hub" {
   remote_virtual_network_id    = sensitive(data.azurerm_virtual_network.hub.id)
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
-  use_remote_gateways          = true
+  # use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t3" {
@@ -164,5 +166,5 @@ resource "azurerm_virtual_network_peering" "hub-to-t3" {
   remote_virtual_network_id    = module.spoke-network-t3.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
-  allow_gateway_transit        = true
+  # allow_gateway_transit        = true
 }

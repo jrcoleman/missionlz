@@ -24,26 +24,31 @@ variable "virtual_network_name" {
 variable "address_prefixes" {
   description = "The subnet address prefixes"
   type        = list(string)
+  sensitive   = true
 }
 
 variable "service_endpoints" {
   description = "The service endpoints to optimize for this subnet"
   type        = list(string)
+  default     = []
 }
 
 variable "enforce_private_link_endpoint_network_policies" {
   description = "Enforce Private Link Endpoints"
   type        = bool
+  default     = false
 }
 
 variable "enforce_private_link_service_network_policies" {
   description = "Enforce Private Link Service"
   type        = bool
+  default     = false
 }
 
 variable "nsg_name" {
   description = "The name of the subnet's virtual network"
   type        = string
+  default     = "defaultNsg"
 }
 
 variable "tags" {
@@ -64,11 +69,13 @@ variable "nsg_rules" {
     source_address_prefix      = string
     destination_address_prefix = string
   }))
+  default = {}
 }
 
 variable "routetable_name" {
   description = "The name of the subnet's route table"
   type        = string
+  default     = "defaultRouteTable"
 }
 
 variable "firewall_ip_address" {
@@ -79,13 +86,13 @@ variable "firewall_ip_address" {
 variable "log_analytics_storage_id" {
   description = "The id of the storage account that stores log analytics diagnostic logs"
   type        = string
-  default = null
-  sensitive = true
+  default     = null
+  sensitive   = true
 }
 
 variable "flow_log_storage_id" {
-  type = string
-  default = null
+  type      = string
+  default   = null
   sensitive = true
 }
 
@@ -106,20 +113,20 @@ variable "log_analytics_workspace_resource_id" {
 
 variable "flow_log_retention_in_days" {
   description = "The number of days to retain flow log data"
-  default     = "7"
+  default     = "90"
   type        = number
 }
 
 # Diagnostic Setting Variables
 variable "eventhub_namespace_authorization_rule_id" {
-  description = "Event Hub Authorization Rule to use for diagnostic settings." 
-  type = string
-  default = null
-  sensitive = true
+  description = "Event Hub Authorization Rule to use for diagnostic settings."
+  type        = string
+  default     = null
+  sensitive   = true
 }
 
 variable "eventhub_name" {
   description = "Event Hub Name to use for diagnostic settings."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }

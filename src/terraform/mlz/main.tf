@@ -189,7 +189,7 @@ resource "azurerm_log_analytics_workspace" "laws" {
   resource_group_name = azurerm_resource_group.tier1.name
   location            = var.location
   sku                 = "PerGB2018"
-  retention_in_days   = "30"
+  retention_in_days   = "90"
   tags                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 
