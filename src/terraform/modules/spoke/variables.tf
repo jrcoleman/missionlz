@@ -71,10 +71,10 @@ variable "subnets" {
       direction                    = string
       access                       = string
       protocol                     = string
-      source_port_ranges           = string
-      destination_port_ranges      = string
-      source_address_prefixes      = string
-      destination_address_prefixes = string
+      source_port_ranges           = list(string)
+      destination_port_ranges      = list(string)
+      source_address_prefixes      = list(string)
+      destination_address_prefixes = list(string)
     }))
 
     routetable_name = string
