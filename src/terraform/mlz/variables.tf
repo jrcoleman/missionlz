@@ -130,7 +130,7 @@ variable "hub_subnets" {
           direction                    = "Inbound"
           access                       = "Allow"
           protocol                     = "Tcp"
-          source_port_ranges           = "3389"
+          source_port_ranges           = ["3389"]
           destination_port_ranges      = ["*"]
           source_address_prefixes      = ["*"]
           destination_address_prefixes = ["*"]
@@ -300,7 +300,7 @@ variable "jumpbox_subnet" {
         direction                    = "Inbound"
         access                       = "Allow"
         protocol                     = "Tcp"
-        source_port_ranges           = "3389"
+        source_port_ranges           = ["3389"]
         destination_port_ranges      = ["*"]
         source_address_prefixes      = ["*"]
         destination_address_prefixes = ["*"]
@@ -482,7 +482,7 @@ variable "tier0_subnets" {
           direction                    = "Inbound"
           access                       = "Allow"
           protocol                     = "Tcp"
-          source_port_ranges           = "3389"
+          source_port_ranges           = ["3389"]
           destination_port_ranges      = ["*"]
           source_address_prefixes      = ["*"]
           destination_address_prefixes = ["*"]
@@ -589,7 +589,7 @@ variable "tier1_subnets" {
           direction                    = "Inbound"
           access                       = "Allow"
           protocol                     = "Tcp"
-          source_port_ranges           = "3389"
+          source_port_ranges           = ["3389"]
           destination_port_ranges      = ["*"]
           source_address_prefixes      = ["*"]
           destination_address_prefixes = ["*"]
@@ -684,7 +684,7 @@ variable "tier2_subnets" {
           direction                    = "Inbound"
           access                       = "Allow"
           protocol                     = "Tcp"
-          source_port_ranges           = "3389"
+          source_port_ranges           = ["3389"]
           destination_port_ranges      = ["*"]
           source_address_prefixes      = ["*"]
           destination_address_prefixes = ["*"]
