@@ -66,15 +66,15 @@ variable "subnets" {
 
     nsg_name = string
     nsg_rules = map(object({
-      name                       = string
-      priority                   = string
-      direction                  = string
-      access                     = string
-      protocol                   = string
-      source_port_range          = string
-      destination_port_range     = string
-      source_address_prefix      = string
-      destination_address_prefix = string
+      name                         = string
+      priority                     = string
+      direction                    = string
+      access                       = string
+      protocol                     = string
+      source_port_ranges           = string
+      destination_port_ranges      = string
+      source_address_prefixes      = string
+      destination_address_prefixes = string
     }))
 
     routetable_name = string

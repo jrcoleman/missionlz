@@ -89,15 +89,15 @@ variable "hub_subnets" {
 
     nsg_name = string
     nsg_rules = map(object({
-      name                       = string
-      priority                   = string
-      direction                  = string
-      access                     = string
-      protocol                   = string
-      source_port_range          = string
-      destination_port_range     = string
-      source_address_prefix      = string
-      destination_address_prefix = string
+      name                         = string
+      priority                     = string
+      direction                    = string
+      access                       = string
+      protocol                     = string
+      source_port_ranges           = string
+      destination_port_ranges      = string
+      source_address_prefixes      = string
+      destination_address_prefixes = string
     }))
 
     routetable_name = string
@@ -114,26 +114,26 @@ variable "hub_subnets" {
       nsg_name = "hubSubnetNsg"
       nsg_rules = {
         "allow_ssh" = {
-          name                       = "allow_ssh"
-          priority                   = "100"
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "22"
-          destination_port_range     = ""
-          source_address_prefix      = "*"
-          destination_address_prefix = ""
+          name                         = "allow_ssh"
+          priority                     = "100"
+          direction                    = "Inbound"
+          access                       = "Allow"
+          protocol                     = "Tcp"
+          source_port_ranges           = ["22"]
+          destination_port_ranges      = ["*"]
+          source_address_prefixes      = ["*"]
+          destination_address_prefixes = ["*"]
         },
         "allow_rdp" = {
-          name                       = "allow_rdp"
-          priority                   = "200"
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "3389"
-          destination_port_range     = ""
-          source_address_prefix      = "*"
-          destination_address_prefix = ""
+          name                         = "allow_rdp"
+          priority                     = "200"
+          direction                    = "Inbound"
+          access                       = "Allow"
+          protocol                     = "Tcp"
+          source_port_ranges           = "3389"
+          destination_port_ranges      = ["*"]
+          source_address_prefixes      = ["*"]
+          destination_address_prefixes = ["*"]
         }
       }
 
@@ -260,15 +260,15 @@ variable "jumpbox_subnet" {
 
     nsg_name = string
     nsg_rules = map(object({
-      name                       = string
-      priority                   = string
-      direction                  = string
-      access                     = string
-      protocol                   = string
-      source_port_range          = string
-      destination_port_range     = string
-      source_address_prefix      = string
-      destination_address_prefix = string
+      name                         = string
+      priority                     = string
+      direction                    = string
+      access                       = string
+      protocol                     = string
+      source_port_ranges           = string
+      destination_port_ranges      = string
+      source_address_prefixes      = string
+      destination_address_prefixes = string
     }))
 
     routetable_name = string
@@ -284,26 +284,26 @@ variable "jumpbox_subnet" {
     nsg_name = "jumpbox-subnet-nsg"
     nsg_rules = {
       "allow_ssh" = {
-        name                       = "allow_ssh"
-        priority                   = "100"
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "22"
-        destination_port_range     = ""
-        source_address_prefix      = "*"
-        destination_address_prefix = ""
+        name                         = "allow_ssh"
+        priority                     = "100"
+        direction                    = "Inbound"
+        access                       = "Allow"
+        protocol                     = "Tcp"
+        source_port_ranges           = ["22"]
+        destination_port_ranges      = ["*"]
+        source_address_prefixes      = ["*"]
+        destination_address_prefixes = ["*"]
       },
       "allow_rdp" = {
-        name                       = "allow_rdp"
-        priority                   = "200"
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "3389"
-        destination_port_range     = ""
-        source_address_prefix      = "*"
-        destination_address_prefix = ""
+        name                         = "allow_rdp"
+        priority                     = "200"
+        direction                    = "Inbound"
+        access                       = "Allow"
+        protocol                     = "Tcp"
+        source_port_ranges           = "3389"
+        destination_port_ranges      = ["*"]
+        source_address_prefixes      = ["*"]
+        destination_address_prefixes = ["*"]
       }
     }
 
@@ -441,15 +441,15 @@ variable "tier0_subnets" {
 
     nsg_name = string
     nsg_rules = map(object({
-      name                       = string
-      priority                   = string
-      direction                  = string
-      access                     = string
-      protocol                   = string
-      source_port_range          = string
-      destination_port_range     = string
-      source_address_prefix      = string
-      destination_address_prefix = string
+      name                         = string
+      priority                     = string
+      direction                    = string
+      access                       = string
+      protocol                     = string
+      source_port_ranges           = string
+      destination_port_ranges      = string
+      source_address_prefixes      = string
+      destination_address_prefixes = string
     }))
 
     routetable_name = string
@@ -466,26 +466,26 @@ variable "tier0_subnets" {
       nsg_name = "identitySubnetNsg"
       nsg_rules = {
         "allow_ssh" = {
-          name                       = "allow_ssh"
-          priority                   = "100"
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "22"
-          destination_port_range     = ""
-          source_address_prefix      = "*"
-          destination_address_prefix = ""
+          name                         = "allow_ssh"
+          priority                     = "100"
+          direction                    = "Inbound"
+          access                       = "Allow"
+          protocol                     = "Tcp"
+          source_port_ranges           = ["22"]
+          destination_port_ranges      = ["*"]
+          source_address_prefixes      = ["*"]
+          destination_address_prefixes = ["*"]
         },
         "allow_rdp" = {
-          name                       = "allow_rdp"
-          priority                   = "200"
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "3389"
-          destination_port_range     = ""
-          source_address_prefix      = "*"
-          destination_address_prefix = ""
+          name                         = "allow_rdp"
+          priority                     = "200"
+          direction                    = "Inbound"
+          access                       = "Allow"
+          protocol                     = "Tcp"
+          source_port_ranges           = "3389"
+          destination_port_ranges      = ["*"]
+          source_address_prefixes      = ["*"]
+          destination_address_prefixes = ["*"]
         }
       }
 
@@ -548,15 +548,15 @@ variable "tier1_subnets" {
 
     nsg_name = string
     nsg_rules = map(object({
-      name                       = string
-      priority                   = string
-      direction                  = string
-      access                     = string
-      protocol                   = string
-      source_port_range          = string
-      destination_port_range     = string
-      source_address_prefix      = string
-      destination_address_prefix = string
+      name                         = string
+      priority                     = string
+      direction                    = string
+      access                       = string
+      protocol                     = string
+      source_port_ranges           = string
+      destination_port_ranges      = string
+      source_address_prefixes      = string
+      destination_address_prefixes = string
     }))
 
     routetable_name = string
@@ -573,26 +573,26 @@ variable "tier1_subnets" {
       nsg_name = "operationsSubnetNsg"
       nsg_rules = {
         "allow_ssh" = {
-          name                       = "allow_ssh"
-          priority                   = "100"
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "22"
-          destination_port_range     = ""
-          source_address_prefix      = "*"
-          destination_address_prefix = ""
+          name                         = "allow_ssh"
+          priority                     = "100"
+          direction                    = "Inbound"
+          access                       = "Allow"
+          protocol                     = "Tcp"
+          source_port_ranges           = ["22"]
+          destination_port_ranges      = ["*"]
+          source_address_prefixes      = ["*"]
+          destination_address_prefixes = ["*"]
         },
         "allow_rdp" = {
-          name                       = "allow_rdp"
-          priority                   = "200"
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "3389"
-          destination_port_range     = ""
-          source_address_prefix      = "*"
-          destination_address_prefix = ""
+          name                         = "allow_rdp"
+          priority                     = "200"
+          direction                    = "Inbound"
+          access                       = "Allow"
+          protocol                     = "Tcp"
+          source_port_ranges           = "3389"
+          destination_port_ranges      = ["*"]
+          source_address_prefixes      = ["*"]
+          destination_address_prefixes = ["*"]
         }
       }
 
@@ -643,15 +643,15 @@ variable "tier2_subnets" {
 
     nsg_name = string
     nsg_rules = map(object({
-      name                       = string
-      priority                   = string
-      direction                  = string
-      access                     = string
-      protocol                   = string
-      source_port_range          = string
-      destination_port_range     = string
-      source_address_prefix      = string
-      destination_address_prefix = string
+      name                         = string
+      priority                     = string
+      direction                    = string
+      access                       = string
+      protocol                     = string
+      source_port_ranges           = string
+      destination_port_ranges      = string
+      source_address_prefixes      = string
+      destination_address_prefixes = string
     }))
 
     routetable_name = string
@@ -668,26 +668,26 @@ variable "tier2_subnets" {
       nsg_name = "sharedServicesSubnetNsg"
       nsg_rules = {
         "allow_ssh" = {
-          name                       = "allow_ssh"
-          priority                   = "100"
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "22"
-          destination_port_range     = ""
-          source_address_prefix      = "*"
-          destination_address_prefix = ""
+          name                         = "allow_ssh"
+          priority                     = "100"
+          direction                    = "Inbound"
+          access                       = "Allow"
+          protocol                     = "Tcp"
+          source_port_ranges           = ["22"]
+          destination_port_ranges      = ["*"]
+          source_address_prefixes      = ["*"]
+          destination_address_prefixes = ["*"]
         },
         "allow_rdp" = {
-          name                       = "allow_rdp"
-          priority                   = "200"
-          direction                  = "Inbound"
-          access                     = "Allow"
-          protocol                   = "Tcp"
-          source_port_range          = "3389"
-          destination_port_range     = ""
-          source_address_prefix      = "*"
-          destination_address_prefix = ""
+          name                         = "allow_rdp"
+          priority                     = "200"
+          direction                    = "Inbound"
+          access                       = "Allow"
+          protocol                     = "Tcp"
+          source_port_ranges           = "3389"
+          destination_port_ranges      = ["*"]
+          source_address_prefixes      = ["*"]
+          destination_address_prefixes = ["*"]
         }
       }
 
