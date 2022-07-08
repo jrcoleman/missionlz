@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+# All Resources
+
 variable "name" {
   description = "The name of the subnet"
   type        = string
@@ -16,6 +18,66 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+}
+
+
+# Param Key Vault
+
+variable "environment" {
+  description = "The Terraform backend environment e.g. public or usgovernment"
+  type        = string
+  default     = "public"
+}
+
+variable "metadata_host" {
+  description = "The metadata host for the Azure Cloud e.g. management.azure.com"
+  type        = string
+  default     = "management.azure.com"
+}
+
+variable "tier1_subid" {
+  description = "Subscription ID for the Tier 1 deployment"
+  type        = string
+  sensitive   = true
+}
+
+variable "terraform_key_vault_name" {
+  description = "Name of the Params Key Vault"
+  type        = string
+  sensitive   = true
+}
+
+variable "terraform_key_vault_rg" {
+  description = "RG Name of the Params Key Vault"
+  type        = string
+}
+
+variable "param_secret_prefix" {
+  description = "Prefix for secrets in the Params Key Vault"
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
+# NSG
+
+variable "default_nsg_rules" {
+  description = "List of default nsg rules to include from the Params Key Vault"
+  type        = list(string)
+  default     = ["DenyHighRisk", "AllowNIHNetIn", "AllowNIHNetOut"]
+}
+
+variable "nsg_rules" {
+  description = "List of nsg rule names to retrieve from the param key vault."
+  type        = list(string)
+  default     = []
+}
+
+# Subnet
+
 variable "virtual_network_name" {
   description = "The name of the subnet's virtual network"
   type        = string
@@ -30,7 +92,7 @@ variable "address_prefixes" {
 variable "service_endpoints" {
   description = "The service endpoints to optimize for this subnet"
   type        = list(string)
-  default     = []
+  default     = null
 }
 
 variable "enforce_private_link_endpoint_network_policies" {
@@ -45,43 +107,16 @@ variable "enforce_private_link_service_network_policies" {
   default     = false
 }
 
-variable "nsg_name" {
-  description = "The name of the subnet's virtual network"
-  type        = string
-  default     = "defaultNsg"
-}
 
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  type        = map(string)
-}
-
-variable "nsg_rules" {
-  description = "A collection of azurerm_network_security_rule"
-  type = map(object({
-    name                         = string
-    priority                     = string
-    direction                    = string
-    access                       = string
-    protocol                     = string
-    source_port_ranges           = list(string)
-    destination_port_ranges      = list(string)
-    source_address_prefixes      = list(string)
-    destination_address_prefixes = list(string)
-  }))
-  default = {}
-}
-
-variable "routetable_name" {
-  description = "The name of the subnet's route table"
-  type        = string
-  default     = "defaultRouteTable"
-}
+# Route Table
 
 variable "firewall_ip_address" {
   description = "The IP Address of the Firewall"
   type        = string
 }
+
+
+# Logging
 
 variable "log_analytics_storage_id" {
   description = "The id of the storage account that stores log analytics diagnostic logs"
@@ -117,7 +152,6 @@ variable "flow_log_retention_in_days" {
   type        = number
 }
 
-# Diagnostic Setting Variables
 variable "eventhub_namespace_authorization_rule_id" {
   description = "Event Hub Authorization Rule to use for diagnostic settings."
   type        = string

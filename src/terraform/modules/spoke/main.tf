@@ -17,24 +17,28 @@ module "subnets" {
   source     = "../subnet"
   for_each   = var.subnets
 
+  environment              = var.environment
+  metadata_host            = var.metadata_host
+  tier1_subid              = var.tier1_subid
+  terraform_key_vault_name = var.terraform_key_vault_name
+  terraform_key_vault_rg   = var.terraform_key_vault_rg
+  param_secret_prefix      = var.param_secret_prefix
+
   name                 = each.value.name
   location             = var.location
   resource_group_name  = var.spoke_rgname
   virtual_network_name = var.spoke_vnetname
-  address_prefixes     = each.value.address_prefixes
   service_endpoints    = lookup(each.value, "service_endpoints", [])
 
   enforce_private_link_endpoint_network_policies = lookup(each.value, "enforce_private_link_endpoint_network_policies", null)
   enforce_private_link_service_network_policies  = lookup(each.value, "enforce_private_link_service_network_policies", null)
 
-  nsg_name  = each.value.nsg_name
-  nsg_rules = each.value.nsg_rules
+  default_nsg_rules = length(each.value.default_nsg_rules) != 0 ? each.value.default_nsg_rules : null
+  nsg_rules         = each.value.nsg_rules
 
-  routetable_name     = each.value.routetable_name
   firewall_ip_address = var.firewall_private_ip
 
-  flow_log_storage_id = var.flow_log_storage_id
-  # log_analytics_storage_id            = module.spoke-network.log_analytics_storage_id
+  flow_log_storage_id                      = var.flow_log_storage_id
   log_analytics_workspace_id               = var.laws_workspace_id
   log_analytics_workspace_location         = var.laws_location
   log_analytics_workspace_resource_id      = var.laws_resource_id

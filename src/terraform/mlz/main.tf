@@ -337,6 +337,13 @@ module "hub-subnets" {
   source     = "../modules/subnet"
   for_each   = var.hub_subnets
 
+  environment              = var.environment
+  metadata_host            = var.metadata_host
+  tier1_subid              = var.tier1_subid
+  terraform_key_vault_name = var.terraform_key_vault_name
+  terraform_key_vault_rg   = var.terraform_key_vault_rg
+  param_secret_prefix      = lower(var.hub_short_name)
+
   name                 = each.value.name
   location             = var.location
   resource_group_name  = azurerm_resource_group.hub.name
@@ -402,6 +409,13 @@ module "spoke-network-t0" {
   depends_on = [azurerm_resource_group.tier0, module.hub-network, module.firewall]
   source     = "../modules/spoke"
 
+  environment              = var.environment
+  metadata_host            = var.metadata_host
+  tier1_subid              = var.tier1_subid
+  terraform_key_vault_name = var.terraform_key_vault_name
+  terraform_key_vault_rg   = var.terraform_key_vault_rg
+  param_secret_prefix      = lower(var.tier0_short_name)
+
   location = azurerm_resource_group.tier0.location
 
   firewall_private_ip = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
@@ -451,6 +465,13 @@ module "spoke-network-t1" {
   depends_on = [azurerm_resource_group.tier1, module.hub-network, module.firewall]
   source     = "../modules/spoke"
 
+  environment              = var.environment
+  metadata_host            = var.metadata_host
+  tier1_subid              = var.tier1_subid
+  terraform_key_vault_name = var.terraform_key_vault_name
+  terraform_key_vault_rg   = var.terraform_key_vault_rg
+  param_secret_prefix      = lower(var.tier1_short_name)
+
   location = azurerm_resource_group.tier1.location
 
   firewall_private_ip = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
@@ -499,6 +520,13 @@ module "spoke-network-t2" {
   providers  = { azurerm = azurerm.tier2 }
   depends_on = [azurerm_resource_group.tier2, module.hub-network, module.firewall]
   source     = "../modules/spoke"
+
+  environment              = var.environment
+  metadata_host            = var.metadata_host
+  tier1_subid              = var.tier1_subid
+  terraform_key_vault_name = var.terraform_key_vault_name
+  terraform_key_vault_rg   = var.terraform_key_vault_rg
+  param_secret_prefix      = lower(var.tier2_short_name)
 
   location = azurerm_resource_group.tier2.location
 

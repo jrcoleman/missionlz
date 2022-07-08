@@ -48,6 +48,17 @@ variable "flow_log_storage_id" {
   default     = null
 }
 
+variable "terraform_key_vault_name" {
+  description = "Name of the Params Key Vault"
+  type        = string
+  sensitive   = true
+}
+
+variable "terraform_key_vault_rg" {
+  description = "RG Name of the Params Key Vault"
+  type        = string
+}
+
 #################################
 # Hub Configuration
 #################################
@@ -56,6 +67,12 @@ variable "hub_subid" {
   description = "Subscription ID for the Hub deployment"
   type        = string
   sensitive   = true
+}
+
+variable "hub_short_name" {
+  description = "Short name of Hub Sub for templates."
+  type        = string
+  default     = "hub"
 }
 
 variable "hub_rgname" {
@@ -81,63 +98,24 @@ variable "hub_subnets" {
   description = "A complex object that describes subnets."
   type = map(object({
     name              = string
-    address_prefixes  = list(string)
     service_endpoints = list(string)
 
     enforce_private_link_endpoint_network_policies = bool
     enforce_private_link_service_network_policies  = bool
 
-    nsg_name = string
-    nsg_rules = map(object({
-      name                         = string
-      priority                     = string
-      direction                    = string
-      access                       = string
-      protocol                     = string
-      source_port_ranges           = list(string)
-      destination_port_ranges      = list(string)
-      source_address_prefixes      = list(string)
-      destination_address_prefixes = list(string)
-    }))
-
-    routetable_name = string
+    default_nsg_rules = list(string)
+    nsg_rules         = list(string)
   }))
   default = {
     "hubSubnet" = {
       name              = "hubSubnet"
-      address_prefixes  = ["10.0.100.128/27"]
       service_endpoints = ["Microsoft.Storage"]
 
       enforce_private_link_endpoint_network_policies = false
       enforce_private_link_service_network_policies  = false
 
-      nsg_name = "hubSubnetNsg"
-      nsg_rules = {
-        "allow_ssh" = {
-          name                         = "allow_ssh"
-          priority                     = "100"
-          direction                    = "Inbound"
-          access                       = "Allow"
-          protocol                     = "Tcp"
-          source_port_ranges           = ["22"]
-          destination_port_ranges      = ["*"]
-          source_address_prefixes      = ["*"]
-          destination_address_prefixes = ["*"]
-        },
-        "allow_rdp" = {
-          name                         = "allow_rdp"
-          priority                     = "200"
-          direction                    = "Inbound"
-          access                       = "Allow"
-          protocol                     = "Tcp"
-          source_port_ranges           = ["3389"]
-          destination_port_ranges      = ["*"]
-          source_address_prefixes      = ["*"]
-          destination_address_prefixes = ["*"]
-        }
-      }
-
-      routetable_name = "hubRouteTable"
+      default_nsg_rules = []
+      nsg_rules         = []
     }
   }
 }
@@ -410,6 +388,12 @@ variable "tier0_subid" {
   sensitive   = true
 }
 
+variable "tier0_short_name" {
+  description = "Short name of Tier0 Sub for templates."
+  type        = string
+  default     = "tier0"
+}
+
 variable "tier0_rgname" {
   description = "Resource Group for the deployment"
   type        = string
@@ -439,20 +423,8 @@ variable "tier0_subnets" {
     enforce_private_link_endpoint_network_policies = bool
     enforce_private_link_service_network_policies  = bool
 
-    nsg_name = string
-    nsg_rules = map(object({
-      name                         = string
-      priority                     = string
-      direction                    = string
-      access                       = string
-      protocol                     = string
-      source_port_ranges           = list(string)
-      destination_port_ranges      = list(string)
-      source_address_prefixes      = list(string)
-      destination_address_prefixes = list(string)
-    }))
-
-    routetable_name = string
+    default_nsg_rules = list(string)
+    nsg_rules         = list(string)
   }))
   default = {
     "identitySubnet" = {
@@ -463,33 +435,8 @@ variable "tier0_subnets" {
       enforce_private_link_endpoint_network_policies = false
       enforce_private_link_service_network_policies  = false
 
-      nsg_name = "identitySubnetNsg"
-      nsg_rules = {
-        "allow_ssh" = {
-          name                         = "allow_ssh"
-          priority                     = "100"
-          direction                    = "Inbound"
-          access                       = "Allow"
-          protocol                     = "Tcp"
-          source_port_ranges           = ["22"]
-          destination_port_ranges      = ["*"]
-          source_address_prefixes      = ["*"]
-          destination_address_prefixes = ["*"]
-        },
-        "allow_rdp" = {
-          name                         = "allow_rdp"
-          priority                     = "200"
-          direction                    = "Inbound"
-          access                       = "Allow"
-          protocol                     = "Tcp"
-          source_port_ranges           = ["3389"]
-          destination_port_ranges      = ["*"]
-          source_address_prefixes      = ["*"]
-          destination_address_prefixes = ["*"]
-        }
-      }
-
-      routetable_name = "identityRouteTable"
+      default_nsg_rules = []
+      nsg_rules         = []
     }
   }
 }
@@ -503,6 +450,12 @@ variable "tier1_subid" {
   type        = string
   default     = ""
   sensitive   = true
+}
+
+variable "tier1_short_name" {
+  description = "Short name of Tier 1 Sub for templates."
+  type        = string
+  default     = "tier1"
 }
 
 variable "tier1_rgname" {
@@ -546,20 +499,8 @@ variable "tier1_subnets" {
     enforce_private_link_endpoint_network_policies = bool
     enforce_private_link_service_network_policies  = bool
 
-    nsg_name = string
-    nsg_rules = map(object({
-      name                         = string
-      priority                     = string
-      direction                    = string
-      access                       = string
-      protocol                     = string
-      source_port_ranges           = list(string)
-      destination_port_ranges      = list(string)
-      source_address_prefixes      = list(string)
-      destination_address_prefixes = list(string)
-    }))
-
-    routetable_name = string
+    default_nsg_rules = list(string)
+    nsg_rules         = list(string)
   }))
   default = {
     "operationsSubnet" = {
@@ -570,33 +511,8 @@ variable "tier1_subnets" {
       enforce_private_link_endpoint_network_policies = false
       enforce_private_link_service_network_policies  = false
 
-      nsg_name = "operationsSubnetNsg"
-      nsg_rules = {
-        "allow_ssh" = {
-          name                         = "allow_ssh"
-          priority                     = "100"
-          direction                    = "Inbound"
-          access                       = "Allow"
-          protocol                     = "Tcp"
-          source_port_ranges           = ["22"]
-          destination_port_ranges      = ["*"]
-          source_address_prefixes      = ["*"]
-          destination_address_prefixes = ["*"]
-        },
-        "allow_rdp" = {
-          name                         = "allow_rdp"
-          priority                     = "200"
-          direction                    = "Inbound"
-          access                       = "Allow"
-          protocol                     = "Tcp"
-          source_port_ranges           = ["3389"]
-          destination_port_ranges      = ["*"]
-          source_address_prefixes      = ["*"]
-          destination_address_prefixes = ["*"]
-        }
-      }
-
-      routetable_name = "operationsRouteTable"
+      default_nsg_rules = []
+      nsg_rules         = []
     }
   }
 }
@@ -610,6 +526,12 @@ variable "tier2_subid" {
   type        = string
   default     = ""
   sensitive   = true
+}
+
+variable "tier2_short_name" {
+  description = "Short name of Tier 2 Sub for templates."
+  type        = string
+  default     = "tier2"
 }
 
 variable "tier2_rgname" {
@@ -641,20 +563,8 @@ variable "tier2_subnets" {
     enforce_private_link_endpoint_network_policies = bool
     enforce_private_link_service_network_policies  = bool
 
-    nsg_name = string
-    nsg_rules = map(object({
-      name                         = string
-      priority                     = string
-      direction                    = string
-      access                       = string
-      protocol                     = string
-      source_port_ranges           = list(string)
-      destination_port_ranges      = list(string)
-      source_address_prefixes      = list(string)
-      destination_address_prefixes = list(string)
-    }))
-
-    routetable_name = string
+    default_nsg_rules = list(string)
+    nsg_rules         = list(string)
   }))
   default = {
     "sharedServicesSubnet" = {
@@ -665,33 +575,8 @@ variable "tier2_subnets" {
       enforce_private_link_endpoint_network_policies = false
       enforce_private_link_service_network_policies  = false
 
-      nsg_name = "sharedServicesSubnetNsg"
-      nsg_rules = {
-        "allow_ssh" = {
-          name                         = "allow_ssh"
-          priority                     = "100"
-          direction                    = "Inbound"
-          access                       = "Allow"
-          protocol                     = "Tcp"
-          source_port_ranges           = ["22"]
-          destination_port_ranges      = ["*"]
-          source_address_prefixes      = ["*"]
-          destination_address_prefixes = ["*"]
-        },
-        "allow_rdp" = {
-          name                         = "allow_rdp"
-          priority                     = "200"
-          direction                    = "Inbound"
-          access                       = "Allow"
-          protocol                     = "Tcp"
-          source_port_ranges           = ["3389"]
-          destination_port_ranges      = ["*"]
-          source_address_prefixes      = ["*"]
-          destination_address_prefixes = ["*"]
-        }
-      }
-
-      routetable_name = "sharedServicesRouteTable"
+      default_nsg_rules = []
+      nsg_rules         = []
     }
   }
 }

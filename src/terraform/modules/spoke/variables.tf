@@ -45,6 +45,44 @@ variable "spoke_vnetname" {
   type        = string
 }
 
+# Param Key Vault
+
+variable "environment" {
+  description = "The Terraform backend environment e.g. public or usgovernment"
+  type        = string
+  default     = "public"
+}
+
+variable "metadata_host" {
+  description = "The metadata host for the Azure Cloud e.g. management.azure.com"
+  type        = string
+  default     = "management.azure.com"
+}
+
+variable "tier1_subid" {
+  description = "Subscription ID for the Tier 1 deployment"
+  type        = string
+  sensitive   = true
+}
+
+variable "terraform_key_vault_name" {
+  description = "Name of the Params Key Vault"
+  type        = string
+  sensitive   = true
+}
+
+variable "terraform_key_vault_rg" {
+  description = "RG Name of the Params Key Vault"
+  type        = string
+}
+
+variable "param_secret_prefix" {
+  description = "Prefix for secrets in the Params Key Vault"
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
 #################################
 # Network configuration section
 #################################
@@ -58,26 +96,13 @@ variable "subnets" {
   description = "A complex object that describes subnets for the spoke network"
   type = map(object({
     name              = string
-    address_prefixes  = list(string)
     service_endpoints = list(string)
 
     enforce_private_link_endpoint_network_policies = bool
     enforce_private_link_service_network_policies  = bool
 
-    nsg_name = string
-    nsg_rules = map(object({
-      name                         = string
-      priority                     = string
-      direction                    = string
-      access                       = string
-      protocol                     = string
-      source_port_ranges           = list(string)
-      destination_port_ranges      = list(string)
-      source_address_prefixes      = list(string)
-      destination_address_prefixes = list(string)
-    }))
-
-    routetable_name = string
+    default_nsg_rules = list(string)
+    nsg_rules         = list(string)
   }))
 }
 
