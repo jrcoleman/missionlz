@@ -24,56 +24,16 @@ variable "tags" {
 }
 
 
-# Param Key Vault
-
-variable "environment" {
-  description = "The Terraform backend environment e.g. public or usgovernment"
-  type        = string
-  default     = "public"
-}
-
-variable "metadata_host" {
-  description = "The metadata host for the Azure Cloud e.g. management.azure.com"
-  type        = string
-  default     = "management.azure.com"
-}
-
-variable "tier1_subid" {
-  description = "Subscription ID for the Tier 1 deployment"
-  type        = string
-  sensitive   = true
-}
-
-variable "terraform_key_vault_name" {
-  description = "Name of the Params Key Vault"
-  type        = string
-  sensitive   = true
-}
-
-variable "terraform_key_vault_rg" {
-  description = "RG Name of the Params Key Vault"
-  type        = string
-}
-
-variable "param_secret_prefix" {
-  description = "Prefix for secrets in the Params Key Vault"
-  type        = string
-  sensitive   = true
-  default     = null
-}
-
 # NSG
 
-variable "default_nsg_rules" {
-  description = "List of default nsg rules to include from the Params Key Vault"
-  type        = list(string)
-  default     = ["DenyHighRisk", "AllowNIHNetIn", "AllowNIHNetOut"]
-}
-
-variable "nsg_rules" {
-  description = "List of nsg rule names to retrieve from the param key vault."
+variable "nsg_rules_names" {
+  description = "List of nsg rule names."
   type        = list(string)
   default     = []
+}
+
+variable "nsg_rules_map" {
+  description = "Map of NSG rules with arguments."
 }
 
 # Subnet

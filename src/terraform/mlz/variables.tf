@@ -417,7 +417,6 @@ variable "tier0_subnets" {
   description = "A complex object that describes subnets."
   type = map(object({
     name              = string
-    address_prefixes  = list(string)
     service_endpoints = list(string)
 
     enforce_private_link_endpoint_network_policies = bool
@@ -429,13 +428,12 @@ variable "tier0_subnets" {
   default = {
     "identitySubnet" = {
       name              = "identitySubnet"
-      address_prefixes  = ["10.0.110.0/27"]
       service_endpoints = ["Microsoft.Storage"]
 
       enforce_private_link_endpoint_network_policies = false
       enforce_private_link_service_network_policies  = false
 
-      default_nsg_rules = []
+      default_nsg_rules = ["DenyHighRisk", "AllowNIHNetIn", "AllowNIHNetOut"]
       nsg_rules         = []
     }
   }
@@ -493,7 +491,6 @@ variable "tier1_subnets" {
   description = "A complex object that describes subnets."
   type = map(object({
     name              = string
-    address_prefixes  = list(string)
     service_endpoints = list(string)
 
     enforce_private_link_endpoint_network_policies = bool
@@ -505,13 +502,12 @@ variable "tier1_subnets" {
   default = {
     "operationsSubnet" = {
       name              = "operationsSubnet"
-      address_prefixes  = ["10.0.115.0/27"]
       service_endpoints = ["Microsoft.Storage"]
 
       enforce_private_link_endpoint_network_policies = false
       enforce_private_link_service_network_policies  = false
 
-      default_nsg_rules = []
+      default_nsg_rules = ["DenyHighRisk", "AllowNIHNetIn", "AllowNIHNetOut"]
       nsg_rules         = []
     }
   }
@@ -557,7 +553,6 @@ variable "tier2_subnets" {
   description = "A complex object that describes subnets."
   type = map(object({
     name              = string
-    address_prefixes  = list(string)
     service_endpoints = list(string)
 
     enforce_private_link_endpoint_network_policies = bool
@@ -569,13 +564,12 @@ variable "tier2_subnets" {
   default = {
     "sharedServicesSubnet" = {
       name              = "sharedServicesSubnet"
-      address_prefixes  = ["10.0.120.0/27"]
       service_endpoints = ["Microsoft.Storage"]
 
       enforce_private_link_endpoint_network_policies = false
       enforce_private_link_service_network_policies  = false
 
-      default_nsg_rules = []
+      default_nsg_rules = ["DenyHighRisk", "AllowNIHNetIn", "AllowNIHNetOut"]
       nsg_rules         = []
     }
   }

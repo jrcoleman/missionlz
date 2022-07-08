@@ -332,32 +332,41 @@ module "hub-network" {
   tags                                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 
+module "hub_subnet_params" {
+  for_each = var.hub_subnets
+
+  source    = "../modules/subnet-params"
+  providers = { azurerm = azurerm.tier1 }
+
+  terraform_key_vault_name = var.terraform_key_vault_name
+  terraform_key_vault_rg   = var.terraform_key_vault_rg
+  param_secret_prefix      = var.hub_short_name
+
+  name              = each.value.name
+  default_nsg_rules = each.value.default_nsg_rules
+  nsg_rules         = each.value.nsg_rules
+}
+
 module "hub-subnets" {
+  providers  = { azurerm = azurerm.hub }
   depends_on = [module.hub-network]
   source     = "../modules/subnet"
   for_each   = var.hub_subnets
-
-  environment              = var.environment
-  metadata_host            = var.metadata_host
-  tier1_subid              = var.tier1_subid
-  terraform_key_vault_name = var.terraform_key_vault_name
-  terraform_key_vault_rg   = var.terraform_key_vault_rg
-  param_secret_prefix      = lower(var.hub_short_name)
 
   name                 = each.value.name
   location             = var.location
   resource_group_name  = azurerm_resource_group.hub.name
   virtual_network_name = module.hub-network.virtual_network_name
-  address_prefixes     = each.value.address_prefixes
+  address_prefixes     = module.hub_subnet_params[each.key].address_prefixes
   service_endpoints    = lookup(each.value, "service_endpoints", [])
 
   enforce_private_link_endpoint_network_policies = lookup(each.value, "enforce_private_link_endpoint_network_policies", null)
   enforce_private_link_service_network_policies  = lookup(each.value, "enforce_private_link_service_network_policies", null)
 
-  nsg_name  = each.value.nsg_name
-  nsg_rules = each.value.nsg_rules
+  nsg_rules_names = concat(lookup(each.value, "default_nsg_rules", []), lookup(each.value, "nsg_rules", []))
+  nsg_rules_map   = module.hub_subnet_params[each.key].nsg_rules
 
-  routetable_name     = each.value.routetable_name
+  # routetable_name     = each.value.routetable_name
   firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
   flow_log_storage_id = var.flow_log_storage_id
@@ -405,7 +414,10 @@ module "firewall" {
 }
 
 module "spoke-network-t0" {
-  providers  = { azurerm = azurerm.tier0 }
+  providers = {
+    azurerm       = azurerm.tier0
+    azurerm.tier1 = azurerm.tier1
+  }
   depends_on = [azurerm_resource_group.tier0, module.hub-network, module.firewall]
   source     = "../modules/spoke"
 
@@ -461,7 +473,10 @@ resource "azurerm_virtual_network_peering" "hub-to-t0" {
 }
 
 module "spoke-network-t1" {
-  providers  = { azurerm = azurerm.tier1 }
+  providers = {
+    azurerm       = azurerm.tier1
+    azurerm.tier1 = azurerm.tier1
+  }
   depends_on = [azurerm_resource_group.tier1, module.hub-network, module.firewall]
   source     = "../modules/spoke"
 
@@ -517,7 +532,10 @@ resource "azurerm_virtual_network_peering" "hub-to-t1" {
 }
 
 module "spoke-network-t2" {
-  providers  = { azurerm = azurerm.tier2 }
+  providers = {
+    azurerm       = azurerm.tier2
+    azurerm.tier1 = azurerm.tier1
+  }
   depends_on = [azurerm_resource_group.tier2, module.hub-network, module.firewall]
   source     = "../modules/spoke"
 
@@ -613,10 +631,14 @@ module "jumpbox-subnet" {
   enforce_private_link_endpoint_network_policies = lookup(var.jumpbox_subnet, "enforce_private_link_endpoint_network_policies", null)
   enforce_private_link_service_network_policies  = lookup(var.jumpbox_subnet, "enforce_private_link_service_network_policies", null)
 
-  nsg_name  = var.jumpbox_subnet.nsg_name
-  nsg_rules = var.jumpbox_subnet.nsg_rules
+  # JC Note: Don't use a jumpbox and modified subnet module
+  # nsg_name  = var.jumpbox_subnet.nsg_name
+  # nsg_rules = var.jumpbox_subnet.nsg_rules
 
-  routetable_name     = var.jumpbox_subnet.routetable_name
+  nsg_rules_names = []
+  nsg_rules_map   = []
+
+  # routetable_name     = var.jumpbox_subnet.routetable_name
   firewall_ip_address = var.create_firewall ? module.firewall[0].firewall_private_ip : var.custom_firewall_ip
 
   flow_log_storage_id = var.flow_log_storage_id
