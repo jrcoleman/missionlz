@@ -114,7 +114,7 @@ variable "hub_subnets" {
       enforce_private_link_endpoint_network_policies = false
       enforce_private_link_service_network_policies  = false
 
-      default_nsg_rules = []
+      default_nsg_rules = ["DenyHighRisk", "AllowNIHNetIn", "AllowNIHNetOut"]
       nsg_rules         = []
     }
   }

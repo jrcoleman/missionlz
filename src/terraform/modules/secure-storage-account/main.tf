@@ -43,32 +43,7 @@ resource "null_resource" "cmk-rotation-policy" {
   }
   provisioner "local-exec" {
     command = <<EOT
-az keyvault key rotation-policy update --vault-name ${var.key_vault_name} `
---name ${azurerm_key_vault_key.cmk.name} `
---value "
-{
-  "lifetimeActions": [
-    {
-      "trigger": {
-        "timeAfterCreate": "P90D",
-        "timeBeforeExpiry" : null
-      },
-      "action": {
-        "type": "Rotate"
-      }
-    },
-    {
-      "trigger": {
-        "timeBeforeExpiry" : "P30D"
-      },
-      "action": {
-        "type": "Notify"
-      }
-    }
-  ],
-  "attributes": {
-    "expiryTime": "P2Y"
-}"
+az keyvault key rotation-policy update --vault-name ${var.key_vault_name} --name ${azurerm_key_vault_key.cmk.name} --value ./modules/secure-storage-account/rotation-policy.json
     EOT
   }
 }
@@ -96,6 +71,11 @@ resource "azurerm_storage_account" "secure" {
     identity_ids = [var.identity_id]
   }
   tags = var.tags
+  lifecycle {
+    ignore_changes = [
+      customer_managed_key
+    ]
+  }
 }
 
 # SA Security Resources
@@ -113,6 +93,11 @@ resource "azurerm_storage_account_customer_managed_key" "cmk" {
   key_vault_id              = sensitive(data.azurerm_key_vault.cmk.id)
   key_name                  = azurerm_key_vault_key.cmk.name
   user_assigned_identity_id = var.identity_id
+  lifecycle {
+    ignore_changes = [
+      key_vault_id
+    ]
+  }
 }
 
 # JC Note: In progress

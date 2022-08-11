@@ -120,7 +120,7 @@ variable "account_tier" {
 
 variable "replication" {
   type    = string
-  default = "ZRS"
+  default = "GRS"
 }
 
 variable "access_tier" {

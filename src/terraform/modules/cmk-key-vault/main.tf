@@ -26,5 +26,3 @@ resource "azurerm_role_assignment" "cmk_identity" {
   principal_id         = azurerm_user_assigned_identity.cmk.principal_id
   role_definition_name = "Key Vault Crypto Service Encryption User"
 }
-
-# Need to ensure that RBAC Assignement for Key Vault Administrator is set for this.

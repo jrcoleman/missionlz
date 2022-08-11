@@ -1,29 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-// JC Note: Using this as a module
-// terraform {
-//   # It is recommended to use remote state instead of local
-//   # If you are using Terraform Cloud, You can update these values in order to configure your remote state.
-//   /*  backend "remote" {
-//     organization = "{{ORGANIZATION_NAME}}"
-//     workspaces {
-//       name = "{{WORKSPACE_NAME}}"
-//     }
-//   }
-//   */
-//   backend "local" {}
-
-//   required_version = ">= 1.0.11"
-//   required_providers {
-//     azurerm = {
-//       source  = "hashicorp/azurerm"
-//       version = "= 2.90.0"
-//     }
-//   }
-// }
-
-// JC Note: Default subscription is tier 1. Be specific for other subscriptions.
+// Default subscription is tier 1. Be specific for other subscriptions.
 provider "azurerm" {
   environment     = var.environment
   metadata_host   = var.metadata_host
@@ -99,6 +77,14 @@ resource "azurerm_resource_group" "tier3" {
   tags     = var.tags
 }
 
+resource "azurerm_resource_group_policy_exemption" "exempt" {
+  for_each             = toset(var.tier3_rg_exemptions)
+  name                 = "${var.short_name}-exemption-${index(var.tier3_rg_exemptions, each.value)}"
+  resource_group_id    = azurerm_resource_group.tier3.id
+  policy_assignment_id = each.value
+  exemption_category   = "Waiver"
+}
+
 ################################
 ### STAGE 1: Logging         ###
 ################################
@@ -122,9 +108,19 @@ data "azurerm_virtual_network" "hub" {
 }
 
 module "spoke-network-t3" {
-  providers  = { azurerm = azurerm.tier3 }
-  depends_on = [azurerm_resource_group.tier3]
+  providers = {
+    azurerm       = azurerm.tier3
+    azurerm.tier1 = azurerm.tier1
+  }
+  depends_on = [azurerm_resource_group.tier3, azurerm_resource_group_policy_exemption.exempt]
   source     = "../modules/spoke"
+
+  environment              = var.environment
+  metadata_host            = var.metadata_host
+  tier1_subid              = var.tier1_subid
+  terraform_key_vault_name = var.terraform_key_vault_name
+  terraform_key_vault_rg   = var.terraform_key_vault_rg
+  param_secret_prefix      = lower(var.short_name)
 
   location = azurerm_resource_group.tier3.location
 
