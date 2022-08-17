@@ -93,9 +93,14 @@ resource "azurerm_monitor_diagnostic_setting" "nsg" {
 
       retention_policy {
         days    = 0
-        enabled = false
+        enabled = true
       }
     }
+  }
+  lifecycle {
+    ignore_changes = [
+      log
+    ]
   }
 }
 
@@ -103,6 +108,7 @@ resource "azurerm_network_watcher_flow_log" "nsgfl" {
   depends_on = [azurerm_network_security_rule.nsgrules, azurerm_network_security_group.nsg]
 
   name                 = "${azurerm_network_security_group.nsg.name}-flow-log"
+  location             = var.location
   network_watcher_name = "NetworkWatcher_${replace(var.location, " ", "")}"
   resource_group_name  = "NetworkWatcherRG"
 
@@ -123,4 +129,5 @@ resource "azurerm_network_watcher_flow_log" "nsgfl" {
     workspace_resource_id = var.log_analytics_workspace_resource_id
     interval_in_minutes   = 10
   }
+  tags = var.tags
 }

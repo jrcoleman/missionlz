@@ -13,3 +13,8 @@ output "cmk_key_vault_name" {
   value     = azurerm_key_vault.cmk.name
   sensitive = true
 }
+
+output "cmk_key_vault_id" {
+  value     = azurerm_key_vault.cmk.id
+  sensitive = true
+}

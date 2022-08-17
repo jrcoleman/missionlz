@@ -174,14 +174,6 @@ resource "azurerm_resource_group" "tier2" {
 ### STAGE 1: Logging         ###
 ################################
 
-// resource "random_id" "laws" {
-//   keepers = {
-//     resource_group = azurerm_resource_group.tier1.name
-//   }
-
-//   byte_length = 8
-// }
-
 resource "azurerm_log_analytics_workspace" "laws" {
   provider = azurerm.tier1
 
@@ -232,9 +224,14 @@ resource "azurerm_monitor_diagnostic_setting" "hub-central" {
 
       retention_policy {
         days    = 0
-        enabled = false
+        enabled = true
       }
     }
+  }
+  lifecycle {
+    ignore_changes = [
+      log
+    ]
   }
 }
 
@@ -256,9 +253,14 @@ resource "azurerm_monitor_diagnostic_setting" "tier0-central" {
 
       retention_policy {
         days    = 0
-        enabled = false
+        enabled = true
       }
     }
+  }
+  lifecycle {
+    ignore_changes = [
+      log
+    ]
   }
 }
 
@@ -280,9 +282,14 @@ resource "azurerm_monitor_diagnostic_setting" "tier1-central" {
 
       retention_policy {
         days    = 0
-        enabled = false
+        enabled = true
       }
     }
+  }
+  lifecycle {
+    ignore_changes = [
+      log
+    ]
   }
 }
 
@@ -304,9 +311,14 @@ resource "azurerm_monitor_diagnostic_setting" "tier2-central" {
 
       retention_policy {
         days    = 0
-        enabled = false
+        enabled = true
       }
     }
+  }
+  lifecycle {
+    ignore_changes = [
+      log
+    ]
   }
 }
 
