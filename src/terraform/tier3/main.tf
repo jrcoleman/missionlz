@@ -108,6 +108,7 @@ data "azurerm_virtual_network" "hub" {
 }
 
 module "spoke-network-t3" {
+  count = length(var.tier3_vnet_address_space) == 0 ? 0 : 1
   providers = {
     azurerm       = azurerm.tier3
     azurerm.tier1 = azurerm.tier1
@@ -140,6 +141,7 @@ module "spoke-network-t3" {
 
 # JC Note: Re enable gateway transit once ExpressRoute Gateway is present.
 resource "azurerm_virtual_network_peering" "t3-to-hub" {
+  count      = length(var.tier3_vnet_address_space) == 0 ? 0 : 1
   provider   = azurerm.tier3
   depends_on = [azurerm_resource_group.tier3, module.spoke-network-t3]
 
@@ -149,18 +151,19 @@ resource "azurerm_virtual_network_peering" "t3-to-hub" {
   remote_virtual_network_id    = sensitive(data.azurerm_virtual_network.hub.id)
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
-  # use_remote_gateways          = true
+  use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t3" {
+  count      = length(var.tier3_vnet_address_space) == 0 ? 0 : 1
   provider   = azurerm.hub
   depends_on = [module.spoke-network-t3]
 
   name                         = "${var.hub_vnetname}-to-${var.tier3_vnetname}"
   resource_group_name          = var.hub_rgname
   virtual_network_name         = var.hub_vnetname
-  remote_virtual_network_id    = module.spoke-network-t3.virtual_network_id
+  remote_virtual_network_id    = module.spoke-network-t3[0].virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
-  # allow_gateway_transit        = true
+  allow_gateway_transit        = true
 }

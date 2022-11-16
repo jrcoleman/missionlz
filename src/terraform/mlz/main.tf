@@ -177,12 +177,13 @@ resource "azurerm_resource_group" "tier2" {
 resource "azurerm_log_analytics_workspace" "laws" {
   provider = azurerm.tier1
 
-  name                = "${var.resourcePrefix}-${var.log_analytics_workspace_name}-${var.resourceSuffix}"
-  resource_group_name = azurerm_resource_group.tier1.name
-  location            = var.location
-  sku                 = "PerGB2018"
-  retention_in_days   = "90"
-  tags                = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
+  name                 = "${var.resourcePrefix}-${var.log_analytics_workspace_name}-${var.resourceSuffix}"
+  resource_group_name  = azurerm_resource_group.tier1.name
+  location             = var.location
+  sku                  = "PerGB2018"
+  cmk_for_query_forced = true
+  retention_in_days    = "181"
+  tags                 = merge(var.tags, { "resourcePrefix" = "${var.resourcePrefix}" })
 }
 
 resource "azurerm_log_analytics_solution" "laws_sentinel" {
@@ -207,6 +208,9 @@ locals {
   log_categories = ["Administrative", "Security", "ServiceHealth", "Alert", "Recommendation", "Policy", "Autoscale", "ResourceHealth"]
 }
 
+# JC Note: ignore_changes log set for diagnostic settings due to null bug
+# JC Note: comment out ignore_changes to update diagnostic settings
+
 resource "azurerm_monitor_diagnostic_setting" "hub-central" {
   provider           = azurerm.hub
   name               = "hub-central-diagnostics"
@@ -224,7 +228,7 @@ resource "azurerm_monitor_diagnostic_setting" "hub-central" {
 
       retention_policy {
         days    = 0
-        enabled = true
+        enabled = false
       }
     }
   }
@@ -253,7 +257,7 @@ resource "azurerm_monitor_diagnostic_setting" "tier0-central" {
 
       retention_policy {
         days    = 0
-        enabled = true
+        enabled = false
       }
     }
   }
@@ -282,7 +286,7 @@ resource "azurerm_monitor_diagnostic_setting" "tier1-central" {
 
       retention_policy {
         days    = 0
-        enabled = true
+        enabled = false
       }
     }
   }
@@ -311,7 +315,7 @@ resource "azurerm_monitor_diagnostic_setting" "tier2-central" {
 
       retention_policy {
         days    = 0
-        enabled = true
+        enabled = false
       }
     }
   }
@@ -468,7 +472,7 @@ resource "azurerm_virtual_network_peering" "t0-to-hub" {
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
-  use_remote_gateways          = true
+  # use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t0" {
@@ -527,7 +531,7 @@ resource "azurerm_virtual_network_peering" "t1-to-hub" {
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
-  use_remote_gateways          = true
+  # use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t1" {
@@ -586,7 +590,7 @@ resource "azurerm_virtual_network_peering" "t2-to-hub" {
   remote_virtual_network_id    = module.hub-network.virtual_network_id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
-  use_remote_gateways          = true
+  # use_remote_gateways          = true
 }
 
 resource "azurerm_virtual_network_peering" "hub-to-t2" {

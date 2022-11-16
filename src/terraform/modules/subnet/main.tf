@@ -15,6 +15,7 @@ resource "azurerm_network_security_group" "nsg" {
   tags = var.tags
 }
 
+# JC Note: Key Vault parameters cause destruction setting ignore_changes to mitigate.
 resource "azurerm_network_security_rule" "nsgrules" {
   for_each = toset(var.nsg_rules_names)
 
@@ -33,6 +34,11 @@ resource "azurerm_network_security_rule" "nsgrules" {
   destination_address_prefixes = try(sensitive(var.nsg_rules_map[each.value].destination_address_prefixes), null)
   resource_group_name          = azurerm_network_security_group.nsg.resource_group_name
   network_security_group_name  = azurerm_network_security_group.nsg.name
+  lifecycle {
+    ignore_changes = [
+      name
+    ]
+  }
 }
 
 # Subnet
@@ -76,6 +82,9 @@ resource "azurerm_subnet_network_security_group_association" "nsg" {
 
 # Logging
 
+# JC Note: ignore_changes log set for diagnostic settings due to null bug
+# JC Note: comment out ignore_changes to update diagnostic settings
+
 resource "azurerm_monitor_diagnostic_setting" "nsg" {
   depends_on = [azurerm_network_security_group.nsg]
 
@@ -92,7 +101,7 @@ resource "azurerm_monitor_diagnostic_setting" "nsg" {
       enabled  = true
 
       retention_policy {
-        days    = 0
+        days    = 180
         enabled = true
       }
     }

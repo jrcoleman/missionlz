@@ -1,3 +1,11 @@
+# Set Subscription RBAC
+resource "azurerm_role_assignment" "sub_owner" {
+  for_each             = toset(var.sub_owners)
+  scope                = var.sub_id
+  role_definition_name = "Owner"
+  principal_id         = each.value
+}
+
 # Enable Security Email Alerts
 
 resource "azurerm_security_center_contact" "security_contact" {
