@@ -27,7 +27,6 @@ resource "azurerm_public_ip" "fw_client_pip" {
   resource_group_name = data.azurerm_resource_group.hub.name
   allocation_method   = "Static"
   sku                 = "Standard"
-  // availability_zone   = "No-Zone"
   tags                = var.tags
 }
 
@@ -37,7 +36,6 @@ resource "azurerm_public_ip" "fw_mgmt_pip" {
   resource_group_name = data.azurerm_resource_group.hub.name
   allocation_method   = "Static"
   sku                 = "Standard"
-  // availability_zone   = "No-Zone"
   tags                = var.tags
 }
 
@@ -53,7 +51,7 @@ resource "azurerm_firewall" "firewall" {
   name                = var.firewall_name
   location            = var.location
   resource_group_name = data.azurerm_resource_group.hub.name
-  sku_name = var.firewall_sku_name
+  sku_name            = var.firewall_sku_name
   sku_tier            = var.firewall_sku
   private_ip_ranges   = var.disable_snat_ip_range
   firewall_policy_id  = azurerm_firewall_policy.firewallpolicy.id
@@ -90,11 +88,11 @@ resource "azurerm_storage_account" "loganalytics" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "firewall-diagnostics" {
-  name                       = "${azurerm_firewall.firewall.name}-fw-diagnostics"
-  target_resource_id         = "/subscriptions/${var.sub_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/azureFirewalls/${var.firewall_name}"
-  storage_account_id         = azurerm_storage_account.loganalytics.id
-  log_analytics_workspace_id = var.log_analytics_workspace_resource_id
-  eventhub_name = var.eventhub_name
+  name                           = "${azurerm_firewall.firewall.name}-fw-diagnostics"
+  target_resource_id             = "/subscriptions/${var.sub_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/azureFirewalls/${var.firewall_name}"
+  storage_account_id             = azurerm_storage_account.loganalytics.id
+  log_analytics_workspace_id     = var.log_analytics_workspace_resource_id
+  eventhub_name                  = var.eventhub_name
   eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   log {
@@ -136,11 +134,11 @@ resource "azurerm_monitor_diagnostic_setting" "firewall-diagnostics" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "publicip-diagnostics" {
-  name                       = "${azurerm_public_ip.fw_client_pip.name}-pip-diagnostics"
-  target_resource_id         = azurerm_public_ip.fw_client_pip.id
-  storage_account_id         = azurerm_storage_account.loganalytics.id
-  log_analytics_workspace_id = var.log_analytics_workspace_resource_id
-  eventhub_name = var.eventhub_name
+  name                           = "${azurerm_public_ip.fw_client_pip.name}-pip-diagnostics"
+  target_resource_id             = azurerm_public_ip.fw_client_pip.id
+  storage_account_id             = azurerm_storage_account.loganalytics.id
+  log_analytics_workspace_id     = var.log_analytics_workspace_resource_id
+  eventhub_name                  = var.eventhub_name
   eventhub_authorization_rule_id = var.eventhub_namespace_authorization_rule_id
 
   log {

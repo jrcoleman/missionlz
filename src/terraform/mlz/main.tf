@@ -133,7 +133,7 @@ locals {
 // resource "random_id" "random" {
 //   keepers = {
 //     # Generate a new id each time we change resourePrefix variable
-//     resourcePrefix = "${var.resourcePrefix}"
+//     resourcePrefix = var.resourcePrefix
 //   }
 //   byte_length = 8
 // }
@@ -411,6 +411,7 @@ module "firewall" {
   client_address_space = var.hub_client_address_space
 
   firewall_name                   = "${var.resourcePrefix}-${var.firewall_name}-${var.resourceSuffix}"
+  firewall_sku_name               = var.firewall_sku_name
   firewall_sku                    = contains(local.firewall_premium_environments, lower(var.environment)) ? "Premium" : "Standard"
   firewall_client_subnet_name     = module.hub-network.firewall_client_subnet_name
   firewall_management_subnet_name = module.hub-network.firewall_management_subnet_name
@@ -644,8 +645,8 @@ module "jumpbox-subnet" {
   address_prefixes     = var.jumpbox_subnet.address_prefixes
   service_endpoints    = lookup(var.jumpbox_subnet, "service_endpoints", [])
 
-  enforce_private_link_endpoint_network_policies = lookup(var.jumpbox_subnet, "enforce_private_link_endpoint_network_policies", null)
-  enforce_private_link_service_network_policies  = lookup(var.jumpbox_subnet, "enforce_private_link_service_network_policies", null)
+  private_endpoint_network_policies_enabled     = lookup(var.jumpbox_subnet, "private_endpoint_network_policies_enabled", null)
+  private_link_service_network_policies_enabled = lookup(var.jumpbox_subnet, "private_link_service_network_policies_enabled", null)
 
   # JC Note: Don't use a jumpbox and modified subnet module
   # nsg_name  = var.jumpbox_subnet.nsg_name

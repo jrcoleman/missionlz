@@ -55,14 +55,14 @@ variable "service_endpoints" {
   default     = null
 }
 
-variable "enforce_private_link_endpoint_network_policies" {
-  description = "Enforce Private Link Endpoints"
+variable "private_endpoint_network_policies_enabled" {
+  description = "Enable or Disable network policies for the private endpoint on the subnet."
   type        = bool
   default     = false
 }
 
-variable "enforce_private_link_service_network_policies" {
-  description = "Enforce Private Link Service"
+variable "private_link_service_network_policies_enabled" {
+  description = "Enable or Disable network policies for the private link service on the subnet."
   type        = bool
   default     = false
 }

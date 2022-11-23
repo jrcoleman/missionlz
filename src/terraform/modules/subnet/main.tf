@@ -51,8 +51,8 @@ resource "azurerm_subnet" "subnet" {
 
   service_endpoints = var.service_endpoints
 
-  enforce_private_link_endpoint_network_policies = var.enforce_private_link_endpoint_network_policies
-  enforce_private_link_service_network_policies  = var.enforce_private_link_service_network_policies
+  private_endpoint_network_policies_enabled     = var.private_endpoint_network_policies_enabled
+  private_link_service_network_policies_enabled = var.private_link_service_network_policies_enabled
 }
 
 resource "azurerm_subnet_network_security_group_association" "nsg" {
